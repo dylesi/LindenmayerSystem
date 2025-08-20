@@ -1,8 +1,10 @@
 import lsystemClass
+import json
 import pygame
 import pygame_gui
 import sys
 import random
+
 pygame.init()
 pygame.display.set_caption("Lindenmayer System")
 
@@ -59,12 +61,15 @@ fps = 60
 clock = pygame.time.Clock()
 lSystemObject = lsystemClass.LSystem()
    
+#Load the JSON file containing rules
+with open ("lsystems.json", "r") as f:
+    lsystems = json.load(f)
 
+#Make a list with all the titles of systems
+options = []
+for name in lsystems:
+    options.append(name)
 
-
-#------------------------------------------------------------------------------
-#GUI DRAWING
-#Default values
 elementPaddingY = 70
 elementPaddingX = 10
 elementOffSet = 80
@@ -77,8 +82,8 @@ innerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(-3, 200, 230,
 innerPanel.border_width = 0
 
 #Dropdown
-options = ["Dragon Curve", "Sierpinski Triangle", "Square Sierpinski", "Koch Curve", "Cross", "Square", "Crystal","Peano Curve","Levy Curve", "Quadratic Gosper", "Hexagonal Gosper", "Fractal Tree", "Fractal Plant", "Fractal Wheat", "Select",]
-selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option=options[-1], relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
+#options = ["Dragon Curve", "Sierpinski Triangle", "Square Sierpinski", "Koch Curve", "Cross", "Square", "Crystal","Peano Curve","Levy Curve", "PentaPlexity" "Quadratic Gosper", "Hexagonal Gosper", "Fractal Tree", "Fractal Plant", "Fractal Wheat", "Select",]
+selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option="Select", relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
 selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system to draw!", relative_rect=pygame.Rect((elementPaddingX, 20), (200,35)), manager=manager, container=outerPanel)
 
 #Title
@@ -108,6 +113,7 @@ innerPanel.hide()
 
 
 
+
 # Main Drawing Function
 def establishSystem():
 
@@ -120,18 +126,17 @@ def establishSystem():
     global returnedCoordinates
     global isFractal
 
-    inputRules = lSystemObject.chooseDrawing(choice)
-    start = inputRules.get("start")
-    rules = inputRules.get("rules")
-    turnAngle = inputRules.get("turnAngle")
-    startAngle = inputRules.get("startAngle")
-    isFractal = inputRules.get("isFractal")
+
+    jsonSystemChoice = lsystems[choice]
+    #inputRules = lSystemObject.chooseDrawing(choice)
+    start = jsonSystemChoice["start"]
+    rules = jsonSystemChoice["rules"]
+    turnAngle = jsonSystemChoice["turnAngle"]
+    startAngle = jsonSystemChoice["startAngle"]
 
 
-    print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
+    #print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
     lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
-    #print(f"MOVET: {lSystemMoves}")
-    
     returnedCoordinates = lSystemObject.generateCoordinates(screen, center, lSystemMoves, startAngle, turnAngle, drawLength, drawWidth)
 
 zoomOffset = 1
@@ -145,13 +150,11 @@ def drawSystem():
     global zoomOffset
     screen.fill((30,30,30))
     defaultDrawColor = "white"
-    #scaled_points = transform_points(returnedCoordinates, zoom, offset)
-    for x, y, isConnected in returnedCoordinates:
 
+    for x, y, isConnected in returnedCoordinates:
         newX = (pygame.math.Vector2(x) - center) * zoomOffset + center
         newY = (pygame.math.Vector2(y) - center) * zoomOffset + center
 
-        #print(newX, newY, zoomOffset)
         if isConnected:
             if randomizeColors:
                 defaultDrawColor = randomColor()
@@ -186,11 +189,10 @@ while is_running:
                 sys.exit()
     
         if event.type == pygame.MOUSEWHEEL:
-            mx, my = pygame.mouse.get_pos()
-            if event.y > 0:  # zoom in
+            if event.y > 0:
                 zoomOffset += zoomStep
 
-            else:            # zoom out
+            else:            
                 zoomOffset = max(zoomStep, zoomOffset - zoomStep)  
             drawSystem()
 
@@ -230,7 +232,8 @@ while is_running:
                 if selected_option == "Select":
                     innerPanel.hide()
                 else:
-                    choice = options.index(event.text)
+                    print(event.text)
+                    choice = event.text
         manager.process_events(event)
     manager.update(time_delta)    
 

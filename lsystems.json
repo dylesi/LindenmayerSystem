@@ -1,5 +1,6 @@
 {
-    "dragonCurve": {
+    "Select": {},
+    "Dragon Curve": {
         "start": "F",
         "rules": {
             "F": "F+G",
@@ -8,7 +9,7 @@
         "turnAngle": 90,
         "startAngle": 270
     },
-    "sierpinski": {
+    "Sierpinski": {
         "start": "F-G-G",
         "rules": {
             "F": "F-G+F+G-F",
@@ -17,7 +18,7 @@
         "turnAngle": 120,
         "startAngle": 120
     },
-    "squareSierpinski": {
+    "Square Sierpinski": {
         "start": "F+XF+F+XF",
         "rules": {
             "X": "XF-F+F-XF+F+XF-F+F-X"
@@ -25,7 +26,7 @@
         "turnAngle": 90,
         "startAngle": 120
     },
-    "kochCurve": {
+    "Koch Curve": {
         "start": "F",
         "rules": {
             "F": "F+F-F-F+F"
@@ -33,7 +34,7 @@
         "turnAngle": 90,
         "startAngle": 0
     },
-    "cross": {
+    "Cross": {
         "start": "F+F+F+F",
         "rules": {
             "F": "F+F-F-FF+F+F-F"
@@ -41,7 +42,7 @@
         "turnAngle": 90,
         "startAngle": 0
     },
-    "square": {
+    "Square": {
         "start": "F+F+F+F",
         "rules": {
             "F": "FF+F-F+F+FF"
@@ -49,7 +50,7 @@
         "turnAngle": 90,
         "startAngle": 45
     },
-    "crystal": {
+    "Crystal": {
         "start": "F+F+F+F",
         "rules": {
             "F": "FF+F++F+F"
@@ -57,7 +58,7 @@
         "turnAngle": 90,
         "startAngle": 45
     },
-    "rings": {
+    "Rings": {
         "start": "F+F+F+F",
         "rules": {
             "F": "FF+F+F+F+F+F-F"
@@ -65,7 +66,7 @@
         "turnAngle": 90,
         "startAngle": 45
     },
-    "peanoCurve": {
+    "Peano Curve": {
         "start": "X",
         "rules": {
             "X": "XFYFX+F+YFXFY-F-XFYFX",
@@ -74,7 +75,7 @@
         "turnAngle": 90,
         "startAngle": 45
     },
-    "levyCurve": {
+    "Levy Curve": {
         "start": "F",
         "rules": {
             "F": "-F++F-"
@@ -82,7 +83,15 @@
         "turnAngle": 45,
         "startAngle": 45
     },
-    "quadraticGosper": {
+    "Pentaplexity": {
+        "start": "F++F++F++F++F",
+        "rules": {
+            "F": "F++F++F|F-F++F"
+        },
+        "turnAngle": 36,
+        "startAngle": 45
+    },
+    "Quadratic Gosper": {
         "start": "-YF",
         "rules": {
             "X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
@@ -91,7 +100,7 @@
         "turnAngle": 90,
         "startAngle": 45
     },
-    "hexagonalGosper": {
+    "Hexagonal Gosper": {
         "start": "XF",
         "rules": {
             "X": "X+YF++YF-FX--FXFX-YF+",
@@ -100,16 +109,16 @@
         "turnAngle": 60,
         "startAngle": 45
     },
-    "fractalTree": {
+    "Fractal Tree": {
         "start": "0",
         "rules": {
             "1": "11",
-            "0": "1[0]0"
+            "0": "1[-0]+0"
         },
         "turnAngle": 45,
         "startAngle": 270
     },
-    "fractalPlant": {
+    "Fractal Plant": {
         "start": "-X",
         "rules": {
             "X": "F+[[X]-X]-F[-FX]+X",
@@ -118,12 +127,20 @@
         "turnAngle": 25,
         "startAngle": 270
     },
-    "fractalWheat": {
+    "Fractal Bush": {
         "start": "F",
         "rules": {
             "F": "F[-F]F[+F][F]"
         },
         "turnAngle": 25,
+        "startAngle": 270
+    },
+    "Koch Curve B": {
+        "start": "F-F-F-F",
+        "rules": {
+            "F": "FF-F-F-F-FF"
+        },
+        "turnAngle": 90,
         "startAngle": 270
     }
 }
