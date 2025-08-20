@@ -4,6 +4,7 @@ import pygame
 import pygame_gui
 import sys
 import random
+import math
 
 pygame.init()
 pygame.display.set_caption("Lindenmayer System")
@@ -16,51 +17,38 @@ surfacePaddingY = 50
 
 
 #Main variables
-choice = None
-iterations = 2
-drawLength = 2
+choice = ""
+iterations = 4
+drawLength = 5
 drawWidth = 2
 startAngle = 0
 drawMirrored = False
 returnedCoordinates = []
+defaultDrawingStartAngle = 0
 choiceAngle = 0
+choiceAngleStep = 20
 isFractal = None
-randomizeColors = False
-
-#Screen
-screen = pygame.display.set_mode((window_width,window_height))
-screen.fill((26, 26, 26))
-
-#Surface for the drawing
-#window_surface = pygame.Surface((window_width - surfacePaddingX, window_height - surfacePaddingY))
-#window_surface.fill("Black")
-#surface_center = (window_surface.get_width() /2), (window_surface.get_height() / 2)
-
-# #Gui surface
-# gui_surface = pygame.Surface((200, window_height - surfacePaddingY))
-# gui_surface.fill((135, 134, 134))
-
-manager = pygame_gui.UIManager((window_width, window_height))
-
-
-#Font and text
-font_size = 20
-font = pygame.font.SysFont('arial', font_size, bold=True) 
-title_text = "Lindenmayer Systems"
-text_color = (255, 255, 255)  # white
-text_surface = font.render(title_text, True, text_color)
-text_rect = text_surface.get_rect(center=(135, 10))
-
-
+maxIterations = 5
+colorTheme = "Default"
+mousePos = pygame.Vector2()
 is_running = True
+clock = pygame.time.Clock()
+
+#Screen related variables
+screen = pygame.display.set_mode((window_width,window_height))
+screenFillColor = (26, 26, 26)
+screen.fill(screenFillColor)
+manager = pygame_gui.UIManager((window_width, window_height))
 windowHeight = screen.get_height()
 windowWidth = screen.get_width()
 center = (windowWidth // 2), (windowHeight / 2)
-
 fps = 60
-clock = pygame.time.Clock()
+
+#Main object
 lSystemObject = lsystemClass.LSystem()
    
+
+
 #Load the JSON file containing rules
 with open ("lsystems.json", "r") as f:
     lsystems = json.load(f)
@@ -69,48 +57,6 @@ with open ("lsystems.json", "r") as f:
 options = []
 for name in lsystems:
     options.append(name)
-
-elementPaddingY = 70
-elementPaddingX = 10
-elementOffSet = 80
-
-
-#Draw Panels, hide initially
-panel_width = 220
-outerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(20, surfacePaddingY / 2, 230, window_height - surfacePaddingY), starting_height=1, manager=manager)
-innerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(-3, 200, 230, 700 ), starting_height=0, manager=manager, parent_element=outerPanel, container=outerPanel)
-innerPanel.border_width = 0
-
-#Dropdown
-#options = ["Dragon Curve", "Sierpinski Triangle", "Square Sierpinski", "Koch Curve", "Cross", "Square", "Crystal","Peano Curve","Levy Curve", "PentaPlexity" "Quadratic Gosper", "Hexagonal Gosper", "Fractal Tree", "Fractal Plant", "Fractal Wheat", "Select",]
-selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option="Select", relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
-selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system to draw!", relative_rect=pygame.Rect((elementPaddingX, 20), (200,35)), manager=manager, container=outerPanel)
-
-#Title
-title_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, -15), (200, 50)), text="Lindenmayer Systems",manager=manager, container=outerPanel)
-#buttons
-generate_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
-quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
-
-#Sliders
-angleSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40), (200, 25)), start_value= 1, value_range=(0,360), manager=manager, container=innerPanel)
-angleSliderTextBox = pygame_gui.elements.UITextBox(html_text="Start angle " + str(choiceAngle), relative_rect=pygame.Rect((elementPaddingX, 10), (200,35)), manager=manager, container=innerPanel)
-
-iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value=2, value_range=(1,30), manager=manager, container=innerPanel)
-iterationSliderTextBox = pygame_gui.elements.UITextBox(html_text="Iterations " + str(iterations), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet), (200,35 )), manager=manager, container=innerPanel)
-
-drawLengthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 2), (200, 25)), start_value= drawLength, value_range=(0.1,30.0), manager=manager, container=innerPanel)
-drawLengthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw Length " + str(drawLength), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 2), (200,35)), manager=manager, container=innerPanel)
-
-drawWidthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 3), (200, 25)), start_value= drawWidth, value_range=(1,10), manager=manager, container=innerPanel)
-drawWidthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw Width " + str(drawWidth), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 3), (200,35)), manager=manager, container=innerPanel)
-
-randomColorCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25 , 40 + elementOffSet * 4), (25, 25)),text="Randomize colors?", manager=manager, container=innerPanel)
-#randomColorTextBox = pygame_gui.elements.UITextBox(html_text="Randomize colors?", relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 4), (200,35)), manager=manager, container=innerPanel)
-
-
-innerPanel.hide()
-
 
 
 
@@ -125,40 +71,120 @@ def establishSystem():
     global choiceAngle
     global returnedCoordinates
     global isFractal
-
+    global maxIterations
+    global colorTheme
+    global defaultDrawingStartAngle
 
     jsonSystemChoice = lsystems[choice]
-    #inputRules = lSystemObject.chooseDrawing(choice)
+    maxIterations = jsonSystemChoice["maxIterations"]
     start = jsonSystemChoice["start"]
     rules = jsonSystemChoice["rules"]
     turnAngle = jsonSystemChoice["turnAngle"]
-    startAngle = jsonSystemChoice["startAngle"]
-
-
+    defaultDrawingStartAngle = jsonSystemChoice["startAngle"]
+    
     #print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
     lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
-    returnedCoordinates = lSystemObject.generateCoordinates(screen, center, lSystemMoves, startAngle, turnAngle, drawLength, drawWidth)
+    returnedCoordinates = lSystemObject.generateCoordinates(center, lSystemMoves, defaultDrawingStartAngle, choiceAngle, turnAngle, drawLength, colorTheme)
 
 zoomOffset = 1
-zoomStep = 0.1
-
-def randomColor():
-    return((random.randint(0,255), random.randint(0,255), random.randint(0, 255)))
+zoomStep = 0.5
+camera_offset = pygame.Vector2(0, 0)
+dragging = False
+isOnTopGUI = False
+last_mousePos = pygame.Vector2(0, 0)
 
 def drawSystem():
     global zoomStep
     global zoomOffset
-    screen.fill((30,30,30))
-    defaultDrawColor = "white"
-
-    for x, y, isConnected in returnedCoordinates:
-        newX = (pygame.math.Vector2(x) - center) * zoomOffset + center
-        newY = (pygame.math.Vector2(y) - center) * zoomOffset + center
+    screen.fill(screenFillColor)
+    for x, y, isConnected, drawColor in returnedCoordinates:
+        newX = (pygame.math.Vector2(x) - center) * zoomOffset + center + camera_offset
+        newY = (pygame.math.Vector2(y) - center) * zoomOffset + center + camera_offset
 
         if isConnected:
-            if randomizeColors:
-                defaultDrawColor = randomColor()
-            pygame.draw.line(screen,defaultDrawColor, newX, newY, drawWidth)
+            pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
+
+
+
+#Draw Panels, hide initially
+elementPaddingY = 70
+elementPaddingX = 10
+elementOffSet = 80
+panel_width = 220
+outerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(20, surfacePaddingY / 2, 230, window_height - surfacePaddingY), starting_height=1, manager=manager)
+innerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(-3, 200, 230, 700 ), starting_height=0, manager=manager, parent_element=outerPanel, container=outerPanel)
+
+
+#Dropdown
+selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option="Select", relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
+selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system to draw!", relative_rect=pygame.Rect((elementPaddingX, 20), (200,35)), manager=manager, container=outerPanel)
+
+#Titles
+pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, -15), (200, 50)), text="Lindenmayer Systems",manager=manager, container=outerPanel)
+pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, 310), (200, 50)), text="Select Colour Style",manager=manager, container=innerPanel)
+
+
+#buttons
+generate_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
+quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
+
+rotateLeftButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, 50), (40, 30)), text='<', manager=manager, container=innerPanel)
+rotateRightButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 110, 50), (40, 30)), text='>', manager=manager, container=innerPanel)
+#Slider
+#angleSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40), (200, 25)), start_value= 1, value_range=(0,360), manager=manager, container=innerPanel, click_increment=40)
+angleSliderTextBox = pygame_gui.elements.UITextBox(html_text="Rotation angle: " + str(choiceAngle), relative_rect=pygame.Rect((elementPaddingX, 10), (200,35)), manager=manager, container=innerPanel)
+
+iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value=iterations, value_range=(1,maxIterations), manager=manager, container=innerPanel)
+iterationSliderTextBox = pygame_gui.elements.UITextBox(html_text="Iterations " + str(iterations), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet), (200,35 )), manager=manager, container=innerPanel)
+
+drawLengthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 2), (200, 25)), start_value= drawLength, value_range=(5, 15), manager=manager, container=innerPanel)
+drawLengthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw length " + str(drawLength), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 2), (200,35)), manager=manager, container=innerPanel)
+
+drawWidthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 3), (200, 25)), start_value= drawWidth, value_range=(1,5), manager=manager, container=innerPanel)
+drawWidthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw width " + str(drawWidth), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 3), (200,35)), manager=manager, container=innerPanel)
+
+
+#Checkboxes
+BrightCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25 , 40 + elementOffSet * 4), (25, 25)),text="Bright", manager=manager, container=innerPanel)
+
+PastelCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5), (25, 25)),text="Pastel", manager=manager, container=innerPanel)
+
+DarkCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5.5), (25, 25)),text="Red + Green", manager=manager, container=innerPanel)
+
+WarmCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6), (25, 25)),text="Fiery", manager=manager, container=innerPanel)
+
+MonochromeCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6.5), (25, 25)),text="Green + Blue", manager=manager, container=innerPanel)
+
+DeepGreenCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 7), (25, 25)),text="Deep Green", manager=manager, container=innerPanel)
+
+CheckBoxObjects = []
+CheckBoxObjects.append(BrightCheckbox)
+CheckBoxObjects.append(PastelCheckbox)
+CheckBoxObjects.append(DarkCheckbox)
+CheckBoxObjects.append(WarmCheckbox)
+CheckBoxObjects.append(MonochromeCheckbox)
+CheckBoxObjects.append(DeepGreenCheckbox)
+
+innerPanel.hide()
+
+
+outerPanelWidth = outerPanel.get_relative_rect().right
+outerPanelHeight = outerPanel.get_abs_rect().bottom 
+
+def checkMouseNotOntopGUI():
+    global mousePos
+    #print(f"outerpWidth: {outerPanelWidth}, mouseposx: {mousePos.x}, outerpheight: {outerPanelHeight} mouseposy: {mousePos.y}")
+    if mousePos.x < outerPanelWidth and mousePos.y < outerPanelHeight:
+        return False
+    else:
+        return True
+
+def rebuildIterationSlider():
+    global iterationSlider
+    iterationSlider.kill()
+    iterations = 4
+    iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value=iterations, value_range=(1,maxIterations), manager=manager, container=innerPanel)
+    iterationSliderTextBox.set_text("Iterations " + str(iterations))
 
 
 while is_running:
@@ -172,37 +198,70 @@ while is_running:
             if event.key == pygame.K_ESCAPE:
                 is_running = False
                 sys.exit()
-            if event.key == pygame.K_SPACE:
-                zoom = 1.0
-                zoomOffset = 0
+
+            if event.key == pygame.K_RIGHT:
+                choiceAngle = (choiceAngle - choiceAngleStep) % 360
+                angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
+                establishSystem()
+                drawSystem()
+
+            if event.key == pygame.K_LEFT:
+                choiceAngle = (choiceAngle + choiceAngleStep) % 360
+                angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
                 establishSystem()
                 drawSystem()
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == generate_button:
-                screen.fill((30,30,30))
                 zoom = 1.0
                 establishSystem()
                 drawSystem()
+
             if event.ui_element == quitButton:
                 is_running = False
                 sys.exit()
-    
+
+            if event.ui_element == rotateRightButton:
+                choiceAngle = (choiceAngle - choiceAngleStep) % 360
+                angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
+                establishSystem()
+                drawSystem()
+
+            if event.ui_element == rotateLeftButton:
+                choiceAngle = (choiceAngle + choiceAngleStep) % 360
+                angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
+                establishSystem()
+                drawSystem()
         if event.type == pygame.MOUSEWHEEL:
             if event.y > 0:
                 zoomOffset += zoomStep
-
             else:            
-                zoomOffset = max(zoomStep, zoomOffset - zoomStep)  
+                zoomOffset = max(0.1, zoomOffset - zoomStep)  
             drawSystem()
 
-        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:  
-            if event.ui_element == angleSlider:    
-                angleSlider.set_current_value(event.value)
-                angleSliderTextBox.set_text("Start angle " + str(event.value))
-                startAngle = event.value
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # left mouse button
+                dragging = True
+                last_mousePos = pygame.Vector2(event.pos)
 
-            if event.ui_element == iterationSlider:    
+        if event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                dragging = False
+                isOnTopGUI = False
+
+        if event.type == pygame.MOUSEMOTION and dragging:
+            #print(f"outerpWidth: {outerPanelWidth}, mouseposx: {mousePos.x}, outerpheight: {outerPanelHeight} mouseposy: {mousePos.y}")
+            mousePos = pygame.Vector2(event.pos)
+            if checkMouseNotOntopGUI():
+                changeInMouseMov = mousePos - last_mousePos
+                camera_offset += changeInMouseMov
+                #print(f"mousePos: {mousePos} lastMousePos: {last_mousePos}, cOffset: {camera_offset}")
+                last_mousePos = mousePos
+                drawSystem()
+
+
+        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:    
+            if event.ui_element == iterationSlider: 
                 iterationSlider.set_current_value(event.value)
                 iterationSliderTextBox.set_text("Iterations " + str(event.value))
                 iterations = event.value
@@ -218,13 +277,30 @@ while is_running:
                 drawWidth = event.value
 
         if event.type == pygame_gui.UI_CHECK_BOX_CHECKED:
-            if event.ui_element == randomColorCheckbox:
-                randomizeColors = True
-        if event.type == pygame_gui.UI_CHECK_BOX_UNCHECKED:
-            if event.ui_element == randomColorCheckbox:
-                randomizeColors = False
+
+            colorTheme = event.ui_element.text
+            checkedBox = event.ui_element
+
+            for checkBoxObj in CheckBoxObjects:
+                if checkBoxObj != checkedBox:
+                    checkBoxObj.set_state(False)
+
+            # if event.ui_element == randomColorCheckbox:
+            #     randomizeColors = True
+        # if event.type == pygame_gui.UI_CHECK_BOX_UNCHECKED:
+
+        #     colorTheme = "Default"
+        #     # if event.ui_element == randomColorCheckbox:
+        #     #     randomizeColors = False
 
         if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+
+            choiceAngle = defaultDrawingStartAngle
+            angleSliderTextBox.set_text("Rotation angle:  " + str(choiceAngle))
+            zoomOffset = 1
+            camera_offset = pygame.Vector2(0, 0)
+            
+            screen.fill((screenFillColor))
             if event.ui_element == selectSystem:
                 selected_option = event.text
                 if selected_option != "Select":
@@ -234,6 +310,8 @@ while is_running:
                 else:
                     print(event.text)
                     choice = event.text
+            establishSystem()
+            rebuildIterationSlider()
         manager.process_events(event)
     manager.update(time_delta)    
 

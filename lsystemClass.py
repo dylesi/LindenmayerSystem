@@ -1,7 +1,7 @@
-
+import colorsys
 import pygame
-import json
 import math
+import random
 
 window_height = 1000
 window_width = 1800
@@ -31,12 +31,32 @@ class LSystem:
     
     #Variable true/false for drawing coordinates
 
+    def colorSelector(self, choice):
+        colorKvp = {
+                'Default': [(255, 255), (255,255), (255, 255)],
+                'Bright': [(100, 225), (100,255), (100, 255)],
+                'Pastel': [(180, 225), (180,255), (180, 255)],
+                'Dark': [(0, 100), (0,100), (0, 100)],
+                'Fiery': [(150, 225), (50,180), (0, 100)],
+                'Green + Blue': [(0, 10), (175,255), (150, 225)],
+                'Red + Green': [(175, 255), (150,225), (0, 10)],
+                'Deep Green': [(0, 10), (130,255), (50, 100)],
+        }
+        r = colorKvp[choice][0]
+        g = colorKvp[choice][1]
+        b = colorKvp[choice][2]
+        
+        return((random.randint(r[0], r[1]), random.randint(g[0], g[1]), random.randint(b[0], b[1])))
 
-    def generateCoordinates(self, screen, startPos, inputList:str, startAngle:float, turnAngle:float, drawLength:float, width, color = "White"):
-        currentAngle = startAngle
+
+    def generateCoordinates(self, startPos, inputList:str, defaultStartDrawingAngle, startDrawingAngle:float, turnAngle:float, drawLength:float, colorTheme):
+
+        defaultDrawingAngle = defaultStartDrawingAngle
+        currentAngle = defaultDrawingAngle + startDrawingAngle
         coordinateArray = []
         fractalStack = []
         isConnected = True
+        drawColor = self.colorSelector(colorTheme)
 
         for move in inputList:
 
@@ -50,20 +70,25 @@ class LSystem:
 
             elif move == "+":
                 currentAngle -= turnAngle
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
 
             elif move == "-":
                 currentAngle += turnAngle
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
+
                 
             elif move == "0":
                 isConnected = False
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                coordinateArray.append((startPos, endPos, isConnected))
+                coordinateArray.append((startPos, endPos, isConnected, drawColor))
                 startPos = endPos
                 isConnected = True
 
             elif move in ["F","G","1"]:
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                coordinateArray.append((startPos, endPos, isConnected))
+                coordinateArray.append((startPos, endPos, isConnected, drawColor))
                 startPos = endPos
 
         return coordinateArray

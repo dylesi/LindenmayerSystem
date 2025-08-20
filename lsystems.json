@@ -7,7 +7,8 @@
             "G": "F-G"
         },
         "turnAngle": 90,
-        "startAngle": 270
+        "startAngle": 270,
+        "maxIterations": 20
     },
     "Sierpinski": {
         "start": "F-G-G",
@@ -16,7 +17,8 @@
             "G": "GG"
         },
         "turnAngle": 120,
-        "startAngle": 120
+        "startAngle": 120,
+        "maxIterations": 10
     },
     "Square Sierpinski": {
         "start": "F+XF+F+XF",
@@ -24,7 +26,8 @@
             "X": "XF-F+F-XF+F+XF-F+F-X"
         },
         "turnAngle": 90,
-        "startAngle": 120
+        "startAngle": 120,
+        "maxIterations": 8
     },
     "Koch Curve": {
         "start": "F",
@@ -32,7 +35,8 @@
             "F": "F+F-F-F+F"
         },
         "turnAngle": 90,
-        "startAngle": 0
+        "startAngle": 0,
+        "maxIterations": 8
     },
     "Cross": {
         "start": "F+F+F+F",
@@ -40,7 +44,8 @@
             "F": "F+F-F-FF+F+F-F"
         },
         "turnAngle": 90,
-        "startAngle": 0
+        "startAngle": 0,
+        "maxIterations": 5
     },
     "Square": {
         "start": "F+F+F+F",
@@ -48,7 +53,8 @@
             "F": "FF+F-F+F+FF"
         },
         "turnAngle": 90,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 6
     },
     "Crystal": {
         "start": "F+F+F+F",
@@ -56,7 +62,8 @@
             "F": "FF+F++F+F"
         },
         "turnAngle": 90,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 7
     },
     "Rings": {
         "start": "F+F+F+F",
@@ -64,7 +71,8 @@
             "F": "FF+F+F+F+F+F-F"
         },
         "turnAngle": 90,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 6
     },
     "Peano Curve": {
         "start": "X",
@@ -73,7 +81,8 @@
             "Y": "YFXFY-F-XFYFX+F+YFXFY"
         },
         "turnAngle": 90,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 6
     },
     "Levy Curve": {
         "start": "F",
@@ -81,15 +90,17 @@
             "F": "-F++F-"
         },
         "turnAngle": 45,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 20
     },
     "Pentaplexity": {
         "start": "F++F++F++F++F",
         "rules": {
-            "F": "F++F++F|F-F++F"
+            "F": "F++F++F+++++F-F++F"
         },
         "turnAngle": 36,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 7
     },
     "Quadratic Gosper": {
         "start": "-YF",
@@ -98,7 +109,8 @@
             "Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
         },
         "turnAngle": 90,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 4
     },
     "Hexagonal Gosper": {
         "start": "XF",
@@ -107,7 +119,8 @@
             "Y": "-FX+YFYF++YF+FX--FX-Y"
         },
         "turnAngle": 60,
-        "startAngle": 45
+        "startAngle": 45,
+        "maxIterations": 4
     },
     "Fractal Tree": {
         "start": "0",
@@ -116,7 +129,8 @@
             "0": "1[-0]+0"
         },
         "turnAngle": 45,
-        "startAngle": 270
+        "startAngle": 270,
+        "maxIterations": 15
     },
     "Fractal Plant": {
         "start": "-X",
@@ -125,7 +139,8 @@
             "F": "FF"
         },
         "turnAngle": 25,
-        "startAngle": 270
+        "startAngle": 270,
+        "maxIterations": 9
     },
     "Fractal Bush": {
         "start": "F",
@@ -133,7 +148,8 @@
             "F": "F[-F]F[+F][F]"
         },
         "turnAngle": 25,
-        "startAngle": 270
+        "startAngle": 270,
+        "maxIterations": 8
     },
     "Koch Curve B": {
         "start": "F-F-F-F",
@@ -141,6 +157,7 @@
             "F": "FF-F-F-F-FF"
         },
         "turnAngle": 90,
-        "startAngle": 270
+        "startAngle": 270,
+        "maxIterations": 6
     }
 }
