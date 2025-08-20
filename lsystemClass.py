@@ -1,5 +1,6 @@
 
 import pygame
+import json
 import math
 
 window_height = 1000
@@ -14,46 +15,126 @@ class LSystem:
     #----------------------------------------------------------------------------------------
     def dragonCurve(self):
         print("DragonCurve")
-        dragonCurveRuleKvp = {
+        kvp = {
             'F': "F+G",
             'G': "F-G"
             }
-        return {'start': "F", 'rules': dragonCurveRuleKvp, 'turnAngle': 90,'startAngle': 270, 'isFractal': False}
+        return {'start': "F", 'rules': kvp, 'turnAngle': 90,'startAngle': 270}
 
     def sierpinski(self):
         print("Sierpinski")
-        sierpinskikvp = {
+        kvp = {
             'F': "F-G+F+G-F",
             'G': "GG"
             }
-        return {'start': "F-G-G", 'rules': sierpinskikvp, 'turnAngle': 120, 'startAngle': 270, 'isFractal': False}
+        return {'start': "F-G-G", 'rules': kvp, 'turnAngle': 120, 'startAngle':120}
+
+    def SquareSierpinski(self):
+        print("Square Sierpinski")
+        kvp = {
+            'X': "XF-F+F-XF+F+XF-F+F-X"
+            }
+        return {'start': "F+XF+F+XF", 'rules': kvp, 'turnAngle': 90, 'startAngle':120}
 
     def kochCurve(self):
         print("Kochcurve")
-        kochCurveKvp = {
+        kvp = {
             'F': "F+F-F-F+F"
             }
-        return {'start': "F", 'rules': kochCurveKvp, 'turnAngle': 90, 'startAngle': 0, 'isFractal': False}
+        return {'start': "F", 'rules': kvp, 'turnAngle': 90, 'startAngle': 0}
     
+    def Cross(self):
+        print("Cross")
+        kvp = {
+            'F': "F+F-F-FF+F+F-F",
+        }
+        return {'start': "F+F+F+F", 'rules': kvp, 'turnAngle': 90, 'startAngle': 0}
+
+    def Square(self):
+        print("Square")
+        kvp = {
+            'F': "FF+F-F+F+FF",
+        }
+        return {'start': "F+F+F+F", 'rules': kvp, 'turnAngle': 90, 'startAngle': 45}
+
+    def Crystal(self):
+        print("Crystal")
+        kvp = {
+            'F': "FF+F++F+F"
+        }
+        return {'start': "F+F+F+F", 'rules': kvp, 'turnAngle': 90, 'startAngle': 45}
+
+    def Rings(self):
+        print("Rings")
+        kvp = {
+            'F': "FF+F+F+F+F+F-F"
+        }
+        return {'start': "F+F+F+F", 'rules': kvp, 'turnAngle': 90, 'startAngle': 45}
+
+    def PeanoCurve(self):
+        print("Peano Curve")
+        kvp = {
+            'X': "XFYFX+F+YFXFY-F-XFYFX",
+            'Y': "YFXFY-F-XFYFX+F+YFXFY"
+        }
+        return {'start': "X", 'rules': kvp, 'turnAngle': 90, 'startAngle': 45}
+    
+    def LevyCurve(self):
+        print("Lévy Curve")
+        kvp = {
+            'F': "-F++F-"
+        }
+        return {'start': "F", 'rules': kvp, 'turnAngle': 45, 'startAngle': 45}
+
+    def QuadraticGosper(self):
+        print("QuadraticGosper")
+        kvp = {
+            'X': "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
+            'Y': "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
+        }
+        return {'start': "-YF", 'rules': kvp, 'turnAngle': 90, 'startAngle': 45}
+
+
+    def HexagonalGosper(self):
+        print("Hexagonal Gosper")
+        kvp = {
+            'X': "X+YF++YF-FX--FXFX-YF+",
+            'Y': "-FX+YFYF++YF+FX--FX-Y"
+        }
+        return {'start': "XF", 'rules': kvp, 'turnAngle': 60, 'startAngle': 45}
+    
+
     def fractalTree(self):
         print("FractalTree")
-        fractalTreeKvp = {
+        kvp = {
             '1': "11",
             '0': "1[0]0"
         }
-        return {'start': "0", 'rules': fractalTreeKvp, 'turnAngle': 45, 'startAngle': 270, 'isFractal': True}
+        return {'start': "0", 'rules': kvp, 'turnAngle': 45, 'startAngle': 270}
         
     def fractalPlant(self):
         print("FractalPlant")
-        fractalPlantKvp = {
+        kvp = {
             'X': "F+[[X]-X]-F[-FX]+X",
             'F': "FF"
         }
-        return {'start': "-X", 'rules': fractalPlantKvp, 'turnAngle': 25, 'startAngle': 270, 'isFractal': True}
-    #-------------------------------------------------------------------------------------------
+        return {'start': "-X", 'rules': kvp, 'turnAngle': 25, 'startAngle': 270}
     
+    def fractalWheat(self):
+        print("FractalWheat")
+        kvp = {
+            'F': "F[-F]F[+F][F]",
+        }
+        return {'start': "F", 'rules': kvp, 'turnAngle': 25, 'startAngle': 270}
+    
+
+    #-------------------------------------------------------------------------------------------
+
+
+
     def chooseDrawing(self, choice):
-        self.curveList = [self.dragonCurve, self.sierpinski, self.kochCurve, self.fractalTree, self.fractalPlant]
+        self.curveList = [self.dragonCurve, self.sierpinski, self.SquareSierpinski, self.kochCurve, self.Cross, self.Square, self.Crystal, self.Rings, self.PeanoCurve, self.LevyCurve, self.QuadraticGosper, self.HexagonalGosper, self.fractalTree, self.fractalPlant, self.fractalWheat]
+
         self.executable = self.curveList[choice]
         return self.executable()
     
@@ -80,29 +161,8 @@ class LSystem:
         print(f"start: {startAngle}, turn: {turnAngle}")
         currentAngle = startAngle
         coordinateArray = []
-        for move in inputList:
-            if move == "+":
-                currentAngle -= turnAngle
-            if move == "-":
-                currentAngle += turnAngle
-            if move == "F" or move =="G":
-                #print(f"currentturnAngle: {currentturnAngle}, turnAngle: {turnAngle}")
-                #print(f"angle when adding coordinates: {turnAngle}")
-                #print(startPos,startPos[0], startPos[1], currentAngle)
-                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                #pygame.draw.line(screen, color, start_pos, end_pos, width)
-                #turtle.fd(drawLength)
-                #print(f"Starpos: {start_pos} Endpos: {end_pos}")
-                coordinateArray.append(endPos)
-                startPos = endPos
-        return coordinateArray
-
-    def generateFractalCoordinates(self, screen, startPos, inputList, startAngle, turnAngle, drawLength, width, color = "White"):
-        print(f"start: {startAngle}, turn: {turnAngle}")
-        currentAngle = startAngle
         fractalStack = []
-        coordinateArray = []
-        cutStem = 0
+        isConnected = True
 
         for move in inputList:
             if move == "[":
@@ -118,17 +178,18 @@ class LSystem:
                 currentAngle -= turnAngle
             if move == "-":
                 currentAngle += turnAngle
-            if move == "F" or move =="G" or move == "1" or move == "0":
-                
-                #print(f"currentturnAngle: {currentturnAngle}, turnAngle: {turnAngle}")
-                #print(f"angle when adding coordinates: {turnAngle}")
+            if move == "0":
+                isConnected = False
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                #pygame.draw.line(screen, color, startPos, endPos, width)
-                #turtle.fd(drawLength)
-                #print(f"Starpos: {start_pos} Endpos: {end_pos}")
-                coordinateArray.append((startPos, endPos))
+                coordinateArray.append((startPos, endPos, isConnected))
                 startPos = endPos
-        
+                isConnected = True
+
+            if move == "F" or move =="G" or move == "1":
+                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
+                coordinateArray.append((startPos, endPos, isConnected))
+                startPos = endPos
+
         return coordinateArray
 
     def newCoordinates(self, drawLength, x, y, angle):

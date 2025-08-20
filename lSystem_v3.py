@@ -2,6 +2,7 @@ import lsystemClass
 import pygame
 import pygame_gui
 import sys
+import random
 pygame.init()
 pygame.display.set_caption("Lindenmayer System")
 
@@ -15,14 +16,14 @@ surfacePaddingY = 50
 #Main variables
 choice = None
 iterations = 2
-drawLength = 10
-drawWidth = 1
+drawLength = 2
+drawWidth = 2
 startAngle = 0
 drawMirrored = False
 returnedCoordinates = []
 choiceAngle = 0
 isFractal = None
-
+randomizeColors = False
 
 #Screen
 screen = pygame.display.set_mode((window_width,window_height))
@@ -74,10 +75,9 @@ panel_width = 220
 outerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(20, surfacePaddingY / 2, 230, window_height - surfacePaddingY), starting_height=1, manager=manager)
 innerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(-3, 200, 230, 700 ), starting_height=0, manager=manager, parent_element=outerPanel, container=outerPanel)
 innerPanel.border_width = 0
-innerPanel.hide()
 
 #Dropdown
-options = ["Dragon Curve", "Sierpinski Triangle", "Koch Curve", "Fractal Tree", "Fractal Plant","Select",]
+options = ["Dragon Curve", "Sierpinski Triangle", "Square Sierpinski", "Koch Curve", "Cross", "Square", "Crystal","Peano Curve","Levy Curve", "Quadratic Gosper", "Hexagonal Gosper", "Fractal Tree", "Fractal Plant", "Fractal Wheat", "Select",]
 selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option=options[-1], relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
 selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system to draw!", relative_rect=pygame.Rect((elementPaddingX, 20), (200,35)), manager=manager, container=outerPanel)
 
@@ -85,33 +85,27 @@ selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system t
 title_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, -15), (200, 50)), text="Lindenmayer Systems",manager=manager, container=outerPanel)
 #buttons
 generate_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
+quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
 
 #Sliders
 angleSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40), (200, 25)), start_value= 1, value_range=(0,360), manager=manager, container=innerPanel)
 angleSliderTextBox = pygame_gui.elements.UITextBox(html_text="Start angle " + str(choiceAngle), relative_rect=pygame.Rect((elementPaddingX, 10), (200,35)), manager=manager, container=innerPanel)
 
-iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value= 1, value_range=(1,30), manager=manager, container=innerPanel)
+iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value=2, value_range=(1,30), manager=manager, container=innerPanel)
 iterationSliderTextBox = pygame_gui.elements.UITextBox(html_text="Iterations " + str(iterations), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet), (200,35 )), manager=manager, container=innerPanel)
 
-drawLengthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 2), (200, 25)), start_value= 0.1, value_range=(0.1,30.0), manager=manager, container=innerPanel)
+drawLengthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 2), (200, 25)), start_value= drawLength, value_range=(0.1,30.0), manager=manager, container=innerPanel)
 drawLengthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw Length " + str(drawLength), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 2), (200,35)), manager=manager, container=innerPanel)
 
-drawWidthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 3), (200, 25)), start_value= 1, value_range=(1,10), manager=manager, container=innerPanel)
+drawWidthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 3), (200, 25)), start_value= drawWidth, value_range=(1,10), manager=manager, container=innerPanel)
 drawWidthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw Width " + str(drawWidth), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 3), (200,35)), manager=manager, container=innerPanel)
 
+randomColorCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25 , 40 + elementOffSet * 4), (25, 25)),text="Randomize colors?", manager=manager, container=innerPanel)
+#randomColorTextBox = pygame_gui.elements.UITextBox(html_text="Randomize colors?", relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 4), (200,35)), manager=manager, container=innerPanel)
 
 
+innerPanel.hide()
 
-def testTree():
-    inputRules = lSystemObject.chooseDrawing(3)
-    start = inputRules.get("start")
-    rules = inputRules.get("rules")
-    turnAngle = inputRules.get("turnAngle")
-
-    testIteration = 3
-    print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {testIteration}")
-    lSystemMoves = lSystemObject.lSystemRules(start,rules,testIteration)
-    print(lSystemMoves)
 
 
 # Main Drawing Function
@@ -137,36 +131,32 @@ def establishSystem():
     print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
     lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
     #print(f"MOVET: {lSystemMoves}")
+    
+    returnedCoordinates = lSystemObject.generateCoordinates(screen, center, lSystemMoves, startAngle, turnAngle, drawLength, drawWidth)
 
-    if isFractal:
-        returnedCoordinates = lSystemObject.generateFractalCoordinates(screen, center, lSystemMoves, startAngle, turnAngle, drawLength, drawWidth)
-    else:
-        returnedCoordinates = lSystemObject.generateCoordinates(screen, center, lSystemMoves, startAngle, turnAngle, drawLength, drawWidth)
+zoomOffset = 1
+zoomStep = 0.1
 
-
-def transform_points(returnedCoordinates, zoom, offset):
-    ox, oy = offset
-    return [(int(x*zoom + ox), int(y*zoom + oy)) for x, y in returnedCoordinates]
-
-
+def randomColor():
+    return((random.randint(0,255), random.randint(0,255), random.randint(0, 255)))
 
 def drawSystem():
+    global zoomStep
+    global zoomOffset
     screen.fill((30,30,30))
-    scaled_points = transform_points(returnedCoordinates, zoom, offset)
-    pygame.draw.lines(screen, (0,255,0), False, scaled_points, drawWidth)
+    defaultDrawColor = "white"
+    #scaled_points = transform_points(returnedCoordinates, zoom, offset)
+    for x, y, isConnected in returnedCoordinates:
 
-def drawFractalSystem():
-    #print(returnedCoordinates)
-    for x, y in returnedCoordinates:
-        #print(x, y)
-        pygame.draw.line(screen, "white", x, y, drawWidth)
+        newX = (pygame.math.Vector2(x) - center) * zoomOffset + center
+        newY = (pygame.math.Vector2(y) - center) * zoomOffset + center
 
-# Zoom / Pan related Variables
-zoom = 1
-zoom_step = 0.5
-offset = [0, 0]   # pan offset
-dragging = False
-last_mouse = (0, 0)
+        #print(newX, newY, zoomOffset)
+        if isConnected:
+            if randomizeColors:
+                defaultDrawColor = randomColor()
+            pygame.draw.line(screen,defaultDrawColor, newX, newY, drawWidth)
+
 
 while is_running:
     time_delta = clock.tick(60)/1000.0
@@ -181,7 +171,7 @@ while is_running:
                 sys.exit()
             if event.key == pygame.K_SPACE:
                 zoom = 1.0
-                offset = [0, 0]
+                zoomOffset = 0
                 establishSystem()
                 drawSystem()
 
@@ -189,54 +179,20 @@ while is_running:
             if event.ui_element == generate_button:
                 screen.fill((30,30,30))
                 zoom = 1.0
-                offset = [0, 0]
                 establishSystem()
-                if isFractal:
-                    drawFractalSystem()
-                else:
-                    drawSystem()
+                drawSystem()
+            if event.ui_element == quitButton:
+                is_running = False
+                sys.exit()
     
         if event.type == pygame.MOUSEWHEEL:
             mx, my = pygame.mouse.get_pos()
-            drawSystem()
-
             if event.y > 0:  # zoom in
-                new_zoom = zoom + zoom_step
+                zoomOffset += zoomStep
+
             else:            # zoom out
-                new_zoom = max(0.1, zoom - zoom_step)
-
-            #Adjust offset so mouse stays over same world point
-            offset[0] = mx - (mx - offset[0]) * (new_zoom / zoom)
-            offset[1] = my - (my - offset[1]) * (new_zoom / zoom)
-            zoom = new_zoom
-
-        #start dragging with left mouse
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            dragging = True
-            last_mouse = event.pos
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            dragging = False
-
-        # While dragging, update offset
-        if event.type == pygame.MOUSEMOTION and dragging:
-
-            outerPanelLeft = outerPanel.get_relative_rect().left
-            outerPanelRight = outerPanel.get_relative_rect().right
-            outerPanelTop = outerPanel.get_relative_rect().top
-            outerPanelBottom = outerPanel.get_relative_rect().bottom
-            mousePosX = pygame.mouse.get_pos()[0]
-            mousePosY = pygame.mouse.get_pos()[1]
-
-            #print(f"mouse posX: {mousePosX}, mouse posY: {mousePosY} left:{outerPanelLeft}, right{outerPanelRight}, top{outerPanelTop}, bottom{outerPanelBottom}")
-
-            if mousePosX < outerPanelLeft or mousePosX > outerPanelRight or mousePosY < outerPanelTop or mousePosY > outerPanelBottom:
-                mx, my = event.pos
-                dx, dy = mx - last_mouse[0], my - last_mouse[1]
-                offset[0] += dx
-                offset[1] += dy
-                last_mouse = event.pos
-
-        
+                zoomOffset = max(zoomStep, zoomOffset - zoomStep)  
+            drawSystem()
 
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:  
             if event.ui_element == angleSlider:    
@@ -258,7 +214,14 @@ while is_running:
                 drawWidthSlider.set_current_value(event.value)
                 drawWidthSliderTextBox.set_text("Draw width " + str(event.value))
                 drawWidth = event.value
-                    
+
+        if event.type == pygame_gui.UI_CHECK_BOX_CHECKED:
+            if event.ui_element == randomColorCheckbox:
+                randomizeColors = True
+        if event.type == pygame_gui.UI_CHECK_BOX_UNCHECKED:
+            if event.ui_element == randomColorCheckbox:
+                randomizeColors = False
+
         if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
             if event.ui_element == selectSystem:
                 selected_option = event.text

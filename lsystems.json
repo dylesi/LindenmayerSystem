@@ -1,0 +1,129 @@
+{
+    "dragonCurve": {
+        "start": "F",
+        "rules": {
+            "F": "F+G",
+            "G": "F-G"
+        },
+        "turnAngle": 90,
+        "startAngle": 270
+    },
+    "sierpinski": {
+        "start": "F-G-G",
+        "rules": {
+            "F": "F-G+F+G-F",
+            "G": "GG"
+        },
+        "turnAngle": 120,
+        "startAngle": 120
+    },
+    "squareSierpinski": {
+        "start": "F+XF+F+XF",
+        "rules": {
+            "X": "XF-F+F-XF+F+XF-F+F-X"
+        },
+        "turnAngle": 90,
+        "startAngle": 120
+    },
+    "kochCurve": {
+        "start": "F",
+        "rules": {
+            "F": "F+F-F-F+F"
+        },
+        "turnAngle": 90,
+        "startAngle": 0
+    },
+    "cross": {
+        "start": "F+F+F+F",
+        "rules": {
+            "F": "F+F-F-FF+F+F-F"
+        },
+        "turnAngle": 90,
+        "startAngle": 0
+    },
+    "square": {
+        "start": "F+F+F+F",
+        "rules": {
+            "F": "FF+F-F+F+FF"
+        },
+        "turnAngle": 90,
+        "startAngle": 45
+    },
+    "crystal": {
+        "start": "F+F+F+F",
+        "rules": {
+            "F": "FF+F++F+F"
+        },
+        "turnAngle": 90,
+        "startAngle": 45
+    },
+    "rings": {
+        "start": "F+F+F+F",
+        "rules": {
+            "F": "FF+F+F+F+F+F-F"
+        },
+        "turnAngle": 90,
+        "startAngle": 45
+    },
+    "peanoCurve": {
+        "start": "X",
+        "rules": {
+            "X": "XFYFX+F+YFXFY-F-XFYFX",
+            "Y": "YFXFY-F-XFYFX+F+YFXFY"
+        },
+        "turnAngle": 90,
+        "startAngle": 45
+    },
+    "levyCurve": {
+        "start": "F",
+        "rules": {
+            "F": "-F++F-"
+        },
+        "turnAngle": 45,
+        "startAngle": 45
+    },
+    "quadraticGosper": {
+        "start": "-YF",
+        "rules": {
+            "X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
+            "Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
+        },
+        "turnAngle": 90,
+        "startAngle": 45
+    },
+    "hexagonalGosper": {
+        "start": "XF",
+        "rules": {
+            "X": "X+YF++YF-FX--FXFX-YF+",
+            "Y": "-FX+YFYF++YF+FX--FX-Y"
+        },
+        "turnAngle": 60,
+        "startAngle": 45
+    },
+    "fractalTree": {
+        "start": "0",
+        "rules": {
+            "1": "11",
+            "0": "1[0]0"
+        },
+        "turnAngle": 45,
+        "startAngle": 270
+    },
+    "fractalPlant": {
+        "start": "-X",
+        "rules": {
+            "X": "F+[[X]-X]-F[-FX]+X",
+            "F": "FF"
+        },
+        "turnAngle": 25,
+        "startAngle": 270
+    },
+    "fractalWheat": {
+        "start": "F",
+        "rules": {
+            "F": "F[-F]F[+F][F]"
+        },
+        "turnAngle": 25,
+        "startAngle": 270
+    }
+}
