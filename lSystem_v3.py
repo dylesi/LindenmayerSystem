@@ -34,6 +34,11 @@ mousePos = pygame.Vector2()
 is_running = True
 clock = pygame.time.Clock()
 
+#TESTVARIABLES
+drawInterval = 1000
+lastTimeDrawn = pygame.time.get_ticks()
+
+
 #Screen related variables
 screen = pygame.display.set_mode((window_width,window_height))
 screenFillColor = (26, 26, 26)
@@ -84,6 +89,12 @@ def establishSystem():
     
     #print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
     lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
+
+    ForwardMoveCount = 0
+    for move in lSystemMoves:
+        if move == "F":
+            ForwardMoveCount += 1
+    #print(f"Moves: {lSystemMoves}, MoveCount: {ForwardMoveCount}. Length: {len(lSystemMoves)})")
     returnedCoordinates = lSystemObject.generateCoordinates(center, lSystemMoves, defaultDrawingStartAngle, choiceAngle, turnAngle, drawLength, colorTheme)
 
 zoomOffset = 1
@@ -93,16 +104,28 @@ dragging = False
 isOnTopGUI = False
 last_mousePos = pygame.Vector2(0, 0)
 
+
 def drawSystem():
     global zoomStep
     global zoomOffset
+    counter = 0
+    counterTwo = 0
+    howManyCounter = 0
     screen.fill(screenFillColor)
-    for x, y, isConnected, drawColor in returnedCoordinates:
-        newX = (pygame.math.Vector2(x) - center) * zoomOffset + center + camera_offset
-        newY = (pygame.math.Vector2(y) - center) * zoomOffset + center + camera_offset
-
+    for startPos, endPos,  isConnected, drawColor in returnedCoordinates:
+        howManyCounter += 1
+        counterTwo += 1
+        newX = (pygame.math.Vector2(startPos) - center) * zoomOffset + center + camera_offset
+        newY = (pygame.math.Vector2(endPos) - center) * zoomOffset + center + camera_offset
+        #print(returnedCoordinates)
         if isConnected:
+            #print(f"nth:{howManyCounter}, startX,Y: {round(startPos[0], 2)} || {round(startPos[1], 2)} | endX,Y:{round(endPos[0], 2)} || {round(startPos[1], 2)} \n")
+            counter += 1
             pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
+    #print(f"Current lines: {counter}, Total Lines: {counterTwo}")
+    howManyCounter = 0
+    counterTwo = 0
+    counter = 0
 
 
 
@@ -187,9 +210,25 @@ def rebuildIterationSlider():
     iterationSliderTextBox.set_text("Iterations " + str(iterations))
 
 
+testLines = [
+    ((50, 50), (200, 50)),
+    ((200, 50), (200, 200)),
+    ((200, 200), (50, 200)),
+    ((50, 200), (50, 50))
+]
+linesToDraw = []
+lineIndex = 0
+drawing = False  
+MYDRAW_EVENT = pygame.USEREVENT + 10
+
 while is_running:
     time_delta = clock.tick(60)/1000.0
     for event in pygame.event.get():
+
+        
+        manager.process_events(event)
+            #ui_manager.process_events(event)
+
         if event.type == pygame.QUIT:
             is_running = False
             sys.exit()
@@ -213,9 +252,16 @@ while is_running:
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == generate_button:
+                camera_offset = pygame.Vector2()
+                zoomOffset = 1
                 zoom = 1.0
                 establishSystem()
-                drawSystem()
+                drawing = True
+                linesToDraw = []
+                line_index = 0
+                pygame.time.set_timer(MYDRAW_EVENT, drawInterval) 
+                #drawSystem()
+
 
             if event.ui_element == quitButton:
                 is_running = False
@@ -232,6 +278,13 @@ while is_running:
                 angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
                 establishSystem()
                 drawSystem()
+        if event.type == MYDRAW_EVENT and drawing:
+            if returnedCoordinates:
+                linesToDraw.append(returnedCoordinates[lineIndex])
+                lineIndex += 1
+                print(linesToDraw)
+            else:
+                pygame.time.set_timer(MYDRAW_EVENT, 0)
         if event.type == pygame.MOUSEWHEEL:
             if event.y > 0:
                 zoomOffset += zoomStep
@@ -295,6 +348,7 @@ while is_running:
 
         if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
 
+            iterations = 4
             choiceAngle = defaultDrawingStartAngle
             angleSliderTextBox.set_text("Rotation angle:  " + str(choiceAngle))
             zoomOffset = 1
@@ -312,14 +366,21 @@ while is_running:
                     choice = event.text
             establishSystem()
             rebuildIterationSlider()
-        manager.process_events(event)
+
     manager.update(time_delta)    
 
 
+    #print(f"LinestodraW: {linesToDraw}")
+    for startPos, endPos,  isConnected, drawColor in linesToDraw:
+        newX = (pygame.math.Vector2(startPos) - center) * zoomOffset + center + camera_offset
+        newY = (pygame.math.Vector2(endPos) - center) * zoomOffset + center + camera_offset
+
+        if isConnected:
+            pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
 
     #------Updates, drawing and refreshes-------
     
-
+    pygame.display.flip()
     clock.tick(fps)
     manager.draw_ui(screen)
     pygame.display.update()
