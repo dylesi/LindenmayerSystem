@@ -8,7 +8,13 @@ An L-system consists of:
 - An initial **axiom** string from which to begin construction  
 - A **mechanism for translating** the generated characters within a string to produce a pattern.
 
+L-systems were introduced and developed in **1968** by *Aristid Lindenmayer*, a Hungarian theoretical biologist and botanist at the University of Utrecht. Lindenmayer used L-systems to describe the behaviour of plant cells and to model the growth processes of plant development.  
 
+Beyond botany, L-systems have also been used to:
+- Model the **morphology** of a variety of organisms  
+- Generate **self-similar fractals**  
+
+---
 
 ### Example: Quadratic Gosper
 
@@ -21,12 +27,10 @@ An L-system consists of:
 - **Turn Angle**:  
   `90°`
 
-L-systems were introduced and developed in **1968** by *Aristid Lindenmayer*, a Hungarian theoretical biologist and botanist at the University of Utrecht. Lindenmayer used L-systems to describe the behaviour of plant cells and to model the growth processes of plant development.  
-
-Beyond botany, L-systems have also been used to:
-- Model the **morphology** of a variety of organisms  
-- Generate **self-similar fractals**  
-
+- "-" decrease the turn angle amount
+- "+" add the turn angle amount
+- "F" draw forward
+- "X" no actions taken, only used as a variable to generate more of the code
 ---
 
 ## Project Goals
