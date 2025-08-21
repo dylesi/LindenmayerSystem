@@ -34,10 +34,6 @@ mousePos = pygame.Vector2()
 is_running = True
 clock = pygame.time.Clock()
 
-#TESTVARIABLES
-drawInterval = 1000
-lastTimeDrawn = pygame.time.get_ticks()
-
 
 #Screen related variables
 screen = pygame.display.set_mode((window_width,window_height))
@@ -52,7 +48,6 @@ fps = 60
 #Main object
 lSystemObject = lsystemClass.LSystem()
    
-
 
 #Load the JSON file containing rules
 with open ("lsystems.json", "r") as f:
@@ -87,14 +82,12 @@ def establishSystem():
     turnAngle = jsonSystemChoice["turnAngle"]
     defaultDrawingStartAngle = jsonSystemChoice["startAngle"]
     
-    #print(f"startString: {start}, ruleDict: {rules}, turnAngle: {turnAngle} iterations: {iterations}")
     lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
 
     ForwardMoveCount = 0
     for move in lSystemMoves:
         if move == "F":
             ForwardMoveCount += 1
-    #print(f"Moves: {lSystemMoves}, MoveCount: {ForwardMoveCount}. Length: {len(lSystemMoves)})")
     returnedCoordinates = lSystemObject.generateCoordinates(center, lSystemMoves, defaultDrawingStartAngle, choiceAngle, turnAngle, drawLength, colorTheme)
 
 zoomOffset = 1
@@ -108,24 +101,17 @@ last_mousePos = pygame.Vector2(0, 0)
 def drawSystem():
     global zoomStep
     global zoomOffset
-    counter = 0
-    counterTwo = 0
-    howManyCounter = 0
     screen.fill(screenFillColor)
     for startPos, endPos,  isConnected, drawColor in returnedCoordinates:
-        howManyCounter += 1
-        counterTwo += 1
+
         newX = (pygame.math.Vector2(startPos) - center) * zoomOffset + center + camera_offset
         newY = (pygame.math.Vector2(endPos) - center) * zoomOffset + center + camera_offset
-        #print(returnedCoordinates)
+
         if isConnected:
-            #print(f"nth:{howManyCounter}, startX,Y: {round(startPos[0], 2)} || {round(startPos[1], 2)} | endX,Y:{round(endPos[0], 2)} || {round(startPos[1], 2)} \n")
+
             counter += 1
             pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
-    #print(f"Current lines: {counter}, Total Lines: {counterTwo}")
-    howManyCounter = 0
-    counterTwo = 0
-    counter = 0
+
 
 
 
@@ -154,8 +140,8 @@ quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPadd
 
 rotateLeftButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, 50), (40, 30)), text='<', manager=manager, container=innerPanel)
 rotateRightButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 110, 50), (40, 30)), text='>', manager=manager, container=innerPanel)
-#Slider
-#angleSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40), (200, 25)), start_value= 1, value_range=(0,360), manager=manager, container=innerPanel, click_increment=40)
+
+#Sliders
 angleSliderTextBox = pygame_gui.elements.UITextBox(html_text="Rotation angle: " + str(choiceAngle), relative_rect=pygame.Rect((elementPaddingX, 10), (200,35)), manager=manager, container=innerPanel)
 
 iterationSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet), (200, 25)), start_value=iterations, value_range=(1,maxIterations), manager=manager, container=innerPanel)
@@ -197,7 +183,7 @@ outerPanelHeight = outerPanel.get_abs_rect().bottom
 
 def checkMouseNotOntopGUI():
     global mousePos
-    #print(f"outerpWidth: {outerPanelWidth}, mouseposx: {mousePos.x}, outerpheight: {outerPanelHeight} mouseposy: {mousePos.y}")
+
     if mousePos.x < outerPanelWidth and mousePos.y < outerPanelHeight:
         return False
     else:
@@ -216,9 +202,7 @@ while is_running:
     time_delta = clock.tick(60)/1000.0
     for event in pygame.event.get():
 
-        
         manager.process_events(event)
-            #ui_manager.process_events(event)
 
         if event.type == pygame.QUIT:
             is_running = False
@@ -287,12 +271,10 @@ while is_running:
                 isOnTopGUI = False
 
         if event.type == pygame.MOUSEMOTION and dragging:
-            #print(f"outerpWidth: {outerPanelWidth}, mouseposx: {mousePos.x}, outerpheight: {outerPanelHeight} mouseposy: {mousePos.y}")
             mousePos = pygame.Vector2(event.pos)
             if checkMouseNotOntopGUI():
                 changeInMouseMov = mousePos - last_mousePos
                 camera_offset += changeInMouseMov
-                #print(f"mousePos: {mousePos} lastMousePos: {last_mousePos}, cOffset: {camera_offset}")
                 last_mousePos = mousePos
                 drawSystem()
 
@@ -322,13 +304,6 @@ while is_running:
                 if checkBoxObj != checkedBox:
                     checkBoxObj.set_state(False)
 
-            # if event.ui_element == randomColorCheckbox:
-            #     randomizeColors = True
-        # if event.type == pygame_gui.UI_CHECK_BOX_UNCHECKED:
-
-        #     colorTheme = "Default"
-        #     # if event.ui_element == randomColorCheckbox:
-        #     #     randomizeColors = False
 
         if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
 
