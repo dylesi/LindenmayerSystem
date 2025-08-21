@@ -61,7 +61,7 @@ Beyond botany, L-systems have also been used to:
 ### Direct Download
 - https://github.com/dylesi/LindenmayerSystem/archive/refs/heads/main.zip
 ### Dependencies
-- You will need Pygame and Pygame-GUI
+- You will need Pygame and Pygame-GUI and Python to be installed.
 ```.sh
 pip install pygame
 ```
