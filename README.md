@@ -49,6 +49,8 @@ Beyond botany, L-systems have also been used to:
 - When you start the program, use the dropdown menu to select a drawing
 - Use the sliders to manipulate the drawing
 - Use the color checkboxes to draw the image in different themes
+- Use the mousescroll wheel to zoom in and out
+- Left click and drag pans the drawing around
 
 
 ## Installation
