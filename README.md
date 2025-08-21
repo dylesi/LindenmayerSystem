@@ -8,7 +8,13 @@ An L-system consists of:
 - An initial **axiom** string from which to begin construction  
 - A **mechanism for translating** the generated characters within a string to produce a pattern.
 
+L-systems were introduced and developed in **1968** by *Aristid Lindenmayer*, a Hungarian theoretical biologist and botanist at the University of Utrecht. Lindenmayer used L-systems to describe the behaviour of plant cells and to model the growth processes of plant development.  
 
+Beyond botany, L-systems have also been used to:
+- Model the **morphology** of a variety of organisms  
+- Generate **self-similar fractals**  
+
+---
 
 ### Example: Quadratic Gosper
 
@@ -21,12 +27,10 @@ An L-system consists of:
 - **Turn Angle**:  
   `90°`
 
-L-systems were introduced and developed in **1968** by *Aristid Lindenmayer*, a Hungarian theoretical biologist and botanist at the University of Utrecht. Lindenmayer used L-systems to describe the behaviour of plant cells and to model the growth processes of plant development.  
-
-Beyond botany, L-systems have also been used to:
-- Model the **morphology** of a variety of organisms  
-- Generate **self-similar fractals**  
-
+- "-" decrease the turn angle amount
+- "+" add the turn angle amount
+- "F" draw forward
+- "X" no actions taken, only used as a variable to generate more of the code
 ---
 
 ## Project Goals
@@ -46,14 +50,18 @@ Beyond botany, L-systems have also been used to:
 ---
 
 ## Usage
-- When you start the program, use the dropdown menu to select a drawing and use the different buttons in the GUI to change how the drawing will look like!
+- When you start the program, use the dropdown menu to select a drawing
+- Use the sliders to manipulate the drawing
+- Use the color checkboxes to draw the image in different themes
+- Use the mousescroll wheel to zoom in and out
+- Left click and drag pans the drawing around
 
 
 ## Installation
 ### Direct Download
 - https://github.com/dylesi/LindenmayerSystem/archive/refs/heads/main.zip
 ### Dependencies
-- You will need Pygame and Pygame-GUI
+- You will need Pygame and Pygame-GUI and Python to be installed.
 ```.sh
 pip install pygame
 ```
@@ -61,4 +69,5 @@ pip install pygame
 ```.sh
 pip install pygame_gui -U
 ```
-  
+## TODO
+- Implement a system to draw the image in real time by set intervals
