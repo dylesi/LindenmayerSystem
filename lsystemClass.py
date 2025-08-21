@@ -1,4 +1,3 @@
-import colorsys
 import pygame
 import math
 import random
@@ -12,16 +11,13 @@ class LSystem:
     def __init__(self):
         self.iterations = 0
 
-    
     def lSystemRules(self, startString, ruleDict, iterations):
         newString = ""
-        #print(f"startString: {startString}, ruleDict: {ruleDict}, iterations: {iterations}")
         if iterations < 1:
             return startString
         else:               
             for char in startString:
                 for key, value in ruleDict.items():
-                    #print(f"key: {key}. value: {value}")
                     if char not in ruleDict:
                         newString += char
                         break
@@ -29,7 +25,6 @@ class LSystem:
                         newString += value
         return self.lSystemRules(newString, ruleDict, iterations - 1)
     
-    #Variable true/false for drawing coordinates
 
     def colorSelector(self, choice):
         colorKvp = {
@@ -61,14 +56,11 @@ class LSystem:
         for move in (inputList):
             if move == "[":
                 fractalStack.append((startPos, currentAngle))
-                #print(fractalStack)
 
             elif move == "]":
                 currentAngle = fractalStack[-1][-1] 
                 startPos = fractalStack[-1][0]
-                #print(f"Fractal stackis now{fractalStack}")
                 fractalStack.pop(-1)
-                #isConnected = True
 
             elif move == "+":
                 currentAngle += turnAngle
@@ -91,7 +83,6 @@ class LSystem:
             elif move in ["F","G","1"]:
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
 
-                #print(f"move is now {move}, startX,Y: {round(startPos[0], 2)} || {round(startPos[1], 2)} | endX,Y:{round(endPos[0], 2)} || {round(endPos[1], 2)}")
                 if startPos == endPos:
                     isConnected = False
                 coordinateArray.append((startPos, endPos, isConnected, drawColor))
