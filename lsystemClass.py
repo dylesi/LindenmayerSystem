@@ -1,6 +1,7 @@
-
+import colorsys
 import pygame
 import math
+import random
 
 window_height = 1000
 window_width = 1800
@@ -10,52 +11,7 @@ window_surface = pygame.Surface((window_width,window_height))
 class LSystem:
     def __init__(self):
         self.iterations = 0
-    
-    #----------------------------------------------------------------------------------------
-    def dragonCurve(self):
-        print("DragonCurve")
-        dragonCurveRuleKvp = {
-            'F': "F+G",
-            'G': "F-G"
-            }
-        return {'start': "F", 'rules': dragonCurveRuleKvp, 'turnAngle': 90,'startAngle': 270, 'isFractal': False}
 
-    def sierpinski(self):
-        print("Sierpinski")
-        sierpinskikvp = {
-            'F': "F-G+F+G-F",
-            'G': "GG"
-            }
-        return {'start': "F-G-G", 'rules': sierpinskikvp, 'turnAngle': 120, 'startAngle': 270, 'isFractal': False}
-
-    def kochCurve(self):
-        print("Kochcurve")
-        kochCurveKvp = {
-            'F': "F+F-F-F+F"
-            }
-        return {'start': "F", 'rules': kochCurveKvp, 'turnAngle': 90, 'startAngle': 0, 'isFractal': False}
-    
-    def fractalTree(self):
-        print("FractalTree")
-        fractalTreeKvp = {
-            '1': "11",
-            '0': "1[0]0"
-        }
-        return {'start': "0", 'rules': fractalTreeKvp, 'turnAngle': 45, 'startAngle': 270, 'isFractal': True}
-        
-    def fractalPlant(self):
-        print("FractalPlant")
-        fractalPlantKvp = {
-            'X': "F+[[X]-X]-F[-FX]+X",
-            'F': "FF"
-        }
-        return {'start': "-X", 'rules': fractalPlantKvp, 'turnAngle': 25, 'startAngle': 270, 'isFractal': True}
-    #-------------------------------------------------------------------------------------------
-    
-    def chooseDrawing(self, choice):
-        self.curveList = [self.dragonCurve, self.sierpinski, self.kochCurve, self.fractalTree, self.fractalPlant]
-        self.executable = self.curveList[choice]
-        return self.executable()
     
     def lSystemRules(self, startString, ruleDict, iterations):
         newString = ""
@@ -75,60 +31,74 @@ class LSystem:
     
     #Variable true/false for drawing coordinates
 
+    def colorSelector(self, choice):
+        colorKvp = {
+                'Default': [(255, 255), (255,255), (255, 255)],
+                'Bright': [(100, 225), (100,255), (100, 255)],
+                'Pastel': [(180, 225), (180,255), (180, 255)],
+                'Dark': [(0, 100), (0,100), (0, 100)],
+                'Fiery': [(150, 225), (50,180), (0, 100)],
+                'Green + Blue': [(0, 10), (175,255), (150, 225)],
+                'Red + Green': [(175, 255), (150,225), (0, 10)],
+                'Deep Green': [(0, 10), (130,255), (50, 100)],
+        }
+        r = colorKvp[choice][0]
+        g = colorKvp[choice][1]
+        b = colorKvp[choice][2]
+        
+        return((random.randint(r[0], r[1]), random.randint(g[0], g[1]), random.randint(b[0], b[1])))
 
-    def generateCoordinates(self, screen, startPos, inputList, startAngle, turnAngle, drawLength, width, color = "White"):
-        print(f"start: {startAngle}, turn: {turnAngle}")
-        currentAngle = startAngle
+
+    def generateCoordinates(self, startPos, inputList:str, defaultStartDrawingAngle, startDrawingAngle:float, turnAngle:float, drawLength:float, colorTheme):
+
+        defaultDrawingAngle = defaultStartDrawingAngle
+        currentAngle = defaultDrawingAngle + startDrawingAngle
         coordinateArray = []
-        for move in inputList:
-            if move == "+":
-                currentAngle -= turnAngle
-            if move == "-":
-                currentAngle += turnAngle
-            if move == "F" or move =="G":
-                #print(f"currentturnAngle: {currentturnAngle}, turnAngle: {turnAngle}")
-                #print(f"angle when adding coordinates: {turnAngle}")
-                #print(startPos,startPos[0], startPos[1], currentAngle)
-                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                #pygame.draw.line(screen, color, start_pos, end_pos, width)
-                #turtle.fd(drawLength)
-                #print(f"Starpos: {start_pos} Endpos: {end_pos}")
-                coordinateArray.append(endPos)
-                startPos = endPos
-        return coordinateArray
-
-    def generateFractalCoordinates(self, screen, startPos, inputList, startAngle, turnAngle, drawLength, width, color = "White"):
-        print(f"start: {startAngle}, turn: {turnAngle}")
-        currentAngle = startAngle
         fractalStack = []
-        coordinateArray = []
-        cutStem = 0
+        isConnected = True
+        drawColor = self.colorSelector(colorTheme)
 
-        for move in inputList:
+        for move in (inputList):
             if move == "[":
                 fractalStack.append((startPos, currentAngle))
-                currentAngle -= turnAngle
-                print(f"now at first {fractalStack}")
-            if move == "]":
-                currentAngle = fractalStack[-1][1] + turnAngle
+                #print(fractalStack)
+
+            elif move == "]":
+                currentAngle = fractalStack[-1][-1] 
                 startPos = fractalStack[-1][0]
+                #print(f"Fractal stackis now{fractalStack}")
                 fractalStack.pop(-1)
-                print(f"now at second {fractalStack}")
-            if move == "+":
-                currentAngle -= turnAngle
-            if move == "-":
+                #isConnected = True
+
+            elif move == "+":
                 currentAngle += turnAngle
-            if move == "F" or move =="G" or move == "1" or move == "0":
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
+
+            elif move == "-":
+                currentAngle -= turnAngle
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
+
                 
-                #print(f"currentturnAngle: {currentturnAngle}, turnAngle: {turnAngle}")
-                #print(f"angle when adding coordinates: {turnAngle}")
+            elif move in  ["0"]:
+                isConnected = False
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                #pygame.draw.line(screen, color, startPos, endPos, width)
-                #turtle.fd(drawLength)
-                #print(f"Starpos: {start_pos} Endpos: {end_pos}")
-                coordinateArray.append((startPos, endPos))
+                coordinateArray.append((startPos, endPos, isConnected, drawColor))
                 startPos = endPos
-        
+                isConnected = True
+
+            elif move in ["F","G","1"]:
+                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
+
+                #print(f"move is now {move}, startX,Y: {round(startPos[0], 2)} || {round(startPos[1], 2)} | endX,Y:{round(endPos[0], 2)} || {round(endPos[1], 2)}")
+                if startPos == endPos:
+                    isConnected = False
+                coordinateArray.append((startPos, endPos, isConnected, drawColor))
+
+                startPos = endPos
+                isConnected = True
+
         return coordinateArray
 
     def newCoordinates(self, drawLength, x, y, angle):
