@@ -108,8 +108,6 @@ def drawSystem():
         newY = (pygame.math.Vector2(endPos) - center) * zoomOffset + center + camera_offset
 
         if isConnected:
-
-            counter += 1
             pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
 
 
