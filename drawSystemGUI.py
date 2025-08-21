@@ -43,15 +43,10 @@ def redrawGUI(manager):
 
     #Checkboxes
     BrightCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25 , 40 + elementOffSet * 4), (25, 25)),text="Bright", manager=manager, container=innerPanel)
-
     PastelCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5), (25, 25)),text="Pastel", manager=manager, container=innerPanel)
-
     DarkCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5.5), (25, 25)),text="Red + Green", manager=manager, container=innerPanel)
-
     WarmCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6), (25, 25)),text="Fiery", manager=manager, container=innerPanel)
-
     MonochromeCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6.5), (25, 25)),text="Green + Blue", manager=manager, container=innerPanel)
-
     DeepGreenCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 7), (25, 25)),text="Deep Green", manager=manager, container=innerPanel)
 
     CheckBoxObjects = []

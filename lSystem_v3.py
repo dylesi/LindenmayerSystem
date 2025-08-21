@@ -1,12 +1,10 @@
 import lsystemClass
-import json
 import pygame
 import pygame_gui
 import sys
 from lsystemvariables import *
 from drawSystemGUI import redrawGUI
-import random
-import math
+
 
 pygame.init()
 pygame.display.set_caption("Lindenmayer System")
@@ -14,7 +12,8 @@ manager = pygame_gui.UIManager((window_width, window_height))
 
 #Main object
 lSystemObject = lsystemClass.LSystem()
-   
+
+is_running = True
 # Main Drawing Function
 def establishSystem():
 
@@ -170,7 +169,6 @@ while is_running:
                 camera_offset += changeInMouseMov
                 last_mousePos = mousePos
                 drawSystem()
-
 
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:    
             if event.ui_element == iterationSlider: 
