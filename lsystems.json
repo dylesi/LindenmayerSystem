@@ -120,7 +120,7 @@
         },
         "turnAngle": 60,
         "startAngle": 45,
-        "maxIterations": 4
+        "maxIterations": 8
     },
     "Fractal Tree": {
         "start": "0",

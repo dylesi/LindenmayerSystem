@@ -148,7 +148,8 @@ pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, 310), (2
 
 
 #buttons
-generate_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
+generateButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
+resetCamButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, innerPanel.get_relative_rect().height - elementPaddingY - 30), (100, 25)), text='Reset Cam', manager=manager, container=innerPanel)
 quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
 
 rotateLeftButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, 50), (40, 30)), text='<', manager=manager, container=innerPanel)
@@ -210,16 +211,6 @@ def rebuildIterationSlider():
     iterationSliderTextBox.set_text("Iterations " + str(iterations))
 
 
-testLines = [
-    ((50, 50), (200, 50)),
-    ((200, 50), (200, 200)),
-    ((200, 200), (50, 200)),
-    ((50, 200), (50, 50))
-]
-linesToDraw = []
-lineIndex = 0
-drawing = False  
-MYDRAW_EVENT = pygame.USEREVENT + 10
 
 while is_running:
     time_delta = clock.tick(60)/1000.0
@@ -251,21 +242,21 @@ while is_running:
                 drawSystem()
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == generate_button:
-                camera_offset = pygame.Vector2()
-                zoomOffset = 1
-                zoom = 1.0
+            if event.ui_element == generateButton:
                 establishSystem()
-                drawing = True
-                linesToDraw = []
-                line_index = 0
-                pygame.time.set_timer(MYDRAW_EVENT, drawInterval) 
-                #drawSystem()
-
+                drawSystem()
 
             if event.ui_element == quitButton:
                 is_running = False
                 sys.exit()
+            
+            if event.ui_element == resetCamButton:
+                screen.fill(screenFillColor)
+                camera_offset = pygame.Vector2()
+                zoomOffset = 1
+                zoom = 1.0
+                establishSystem()
+                drawSystem()
 
             if event.ui_element == rotateRightButton:
                 choiceAngle = (choiceAngle - choiceAngleStep) % 360
@@ -278,13 +269,6 @@ while is_running:
                 angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
                 establishSystem()
                 drawSystem()
-        if event.type == MYDRAW_EVENT and drawing:
-            if returnedCoordinates:
-                linesToDraw.append(returnedCoordinates[lineIndex])
-                lineIndex += 1
-                print(linesToDraw)
-            else:
-                pygame.time.set_timer(MYDRAW_EVENT, 0)
         if event.type == pygame.MOUSEWHEEL:
             if event.y > 0:
                 zoomOffset += zoomStep
@@ -370,17 +354,8 @@ while is_running:
     manager.update(time_delta)    
 
 
-    #print(f"LinestodraW: {linesToDraw}")
-    for startPos, endPos,  isConnected, drawColor in linesToDraw:
-        newX = (pygame.math.Vector2(startPos) - center) * zoomOffset + center + camera_offset
-        newY = (pygame.math.Vector2(endPos) - center) * zoomOffset + center + camera_offset
-
-        if isConnected:
-            pygame.draw.line(screen, drawColor, newX, newY, drawWidth)
-
     #------Updates, drawing and refreshes-------
     
-    pygame.display.flip()
     clock.tick(fps)
     manager.draw_ui(screen)
     pygame.display.update()
