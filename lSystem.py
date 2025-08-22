@@ -2,7 +2,6 @@ import lsystemClass
 import pygame
 import pygame_gui
 import sys
-from lsystemvariables import *
 
 pygame.init()
 pygame.display.set_caption("Lindenmayer System")
