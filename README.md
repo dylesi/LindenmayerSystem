@@ -72,6 +72,7 @@ pip install pygame
 pip install pygame_gui -U
 ```
 ## TODO
-- Implement a system to draw the image in real time by set intervals
-- Implement variables in a more robust way
-- Try to make it an executable
+- Implement a system to draw the image in real time by set intervals // Implemented
+- Implement variables in a more robust way // implemented
+- Try to make it an executable // Complete
+- More optimization to make it faster
