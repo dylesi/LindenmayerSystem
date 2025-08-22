@@ -44,8 +44,8 @@ Beyond botany, L-systems have also been used to:
 ---
 
 ## Example Output
-<img width="2250" height="1250" alt="python_ipHO8ekrQK" src="https://github.com/user-attachments/assets/de1576fc-5a17-4528-a6c8-7bf2747be771" />
-<img width="2250" height="1250" alt="python_R9Wn5yXeXP" src="https://github.com/user-attachments/assets/52792a5a-0320-49e2-b6ff-d31f62ac1d43" />
+<img width="2250" height="1250" alt="python_Obg2HFVXPM" src="https://github.com/user-attachments/assets/5cc0c8db-a350-4812-875f-990c323a5182" />
+<img src="https://i.imgur.com/y1votcB.gif" width="2250" height="1250" />
 
 ---
 
@@ -55,7 +55,7 @@ Beyond botany, L-systems have also been used to:
 - Use the color checkboxes to draw the image in different themes
 - Use the mousescroll wheel to zoom in and out
 - Left click and drag pans the drawing around
-
+- Use drawing speed to determine how fast the image generates (0 is instant)
 
 ## Installation
 ### Direct Download
