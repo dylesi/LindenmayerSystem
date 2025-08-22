@@ -100,7 +100,7 @@
         },
         "turnAngle": 36,
         "startAngle": 45,
-        "maxIterations": 7
+        "maxIterations": 5
     },
     "Quadratic Gosper": {
         "start": "-YF",
