@@ -1,17 +1,17 @@
 {
     "Select": {},
     "Dragon Curve": {
-        "start": "F",
+        "axiom": "F",
         "rules": {
             "F": "F+G",
             "G": "F-G"
         },
         "turnAngle": 90,
         "startAngle": 270,
-        "maxIterations": 15
+        "maxIterations": 18
     },
     "Sierpinski": {
-        "start": "F-G-G",
+        "axiom": "F-G-G",
         "rules": {
             "F": "F-G+F+G-F",
             "G": "GG"
@@ -21,7 +21,7 @@
         "maxIterations": 10
     },
     "Square Sierpinski": {
-        "start": "F+XF+F+XF",
+        "axiom": "F+XF+F+XF",
         "rules": {
             "X": "XF-F+F-XF+F+XF-F+F-X"
         },
@@ -30,7 +30,7 @@
         "maxIterations": 8
     },
     "Koch Curve": {
-        "start": "F",
+        "axiom": "F",
         "rules": {
             "F": "F+F-F-F+F"
         },
@@ -38,8 +38,17 @@
         "startAngle": 0,
         "maxIterations": 8
     },
+    "Koch Snowflake": {
+        "axiom": "F++F++F",
+        "rules": {
+            "F": "F-F++F-F"
+        },
+        "turnAngle": 60,
+        "startAngle": 0,
+        "maxIterations": 8
+    },
     "Cross": {
-        "start": "F+F+F+F",
+        "axiom": "F+F+F+F",
         "rules": {
             "F": "F+F-F-FF+F+F-F"
         },
@@ -47,8 +56,17 @@
         "startAngle": 0,
         "maxIterations": 5
     },
+    "Krishna Anklets": {
+        "axiom": "-X--X",
+        "rules": {
+            "X": "XFX--XFX"
+        },
+        "turnAngle": 45,
+        "startAngle": 0,
+        "maxIterations": 9
+    },
     "Square": {
-        "start": "F+F+F+F",
+        "axiom": "F+F+F+F",
         "rules": {
             "F": "FF+F-F+F+FF"
         },
@@ -56,8 +74,17 @@
         "startAngle": 45,
         "maxIterations": 6
     },
+    "Triangle": {
+        "axiom": "F+F+F",
+        "rules": {
+            "F": "F-F+F"
+        },
+        "turnAngle": 120,
+        "startAngle": 45,
+        "maxIterations": 10
+    },
     "Crystal": {
-        "start": "F+F+F+F",
+        "axiom": "F+F+F+F",
         "rules": {
             "F": "FF+F++F+F"
         },
@@ -66,7 +93,7 @@
         "maxIterations": 7
     },
     "Rings": {
-        "start": "F+F+F+F",
+        "axiom": "F+F+F+F",
         "rules": {
             "F": "FF+F+F+F+F+F-F"
         },
@@ -75,7 +102,7 @@
         "maxIterations": 6
     },
     "Peano Curve": {
-        "start": "X",
+        "axiom": "X",
         "rules": {
             "X": "XFYFX+F+YFXFY-F-XFYFX",
             "Y": "YFXFY-F-XFYFX+F+YFXFY"
@@ -85,7 +112,7 @@
         "maxIterations": 6
     },
     "Levy Curve": {
-        "start": "F",
+        "axiom": "F",
         "rules": {
             "F": "-F++F-"
         },
@@ -94,7 +121,7 @@
         "maxIterations": 20
     },
     "Pentaplexity": {
-        "start": "F++F++F++F++F",
+        "axiom": "F++F++F++F++F",
         "rules": {
             "F": "F++F++F+++++F-F++F"
         },
@@ -103,27 +130,27 @@
         "maxIterations": 5
     },
     "Quadratic Gosper": {
-        "start": "-YF",
+        "axiom": "-YF",
         "rules": {
             "X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
             "Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
         },
         "turnAngle": 90,
         "startAngle": 45,
-        "maxIterations": 5
+        "maxIterations": 4
     },
     "Hexagonal Gosper": {
-        "start": "XF",
+        "axiom": "XF",
         "rules": {
             "X": "X+YF++YF-FX--FXFX-YF+",
             "Y": "-FX+YFYF++YF+FX--FX-Y"
         },
         "turnAngle": 60,
         "startAngle": 45,
-        "maxIterations": 8
+        "maxIterations": 7
     },
     "Fractal Tree": {
-        "start": "0",
+        "axiom": "0",
         "rules": {
             "1": "11",
             "0": "1[-0]+0"
@@ -133,7 +160,7 @@
         "maxIterations": 15
     },
     "Fractal Plant": {
-        "start": "-X",
+        "axiom": "-X",
         "rules": {
             "X": "F+[[X]-X]-F[-FX]+X",
             "F": "FF"
@@ -143,7 +170,7 @@
         "maxIterations": 9
     },
     "Fractal Bush": {
-        "start": "F",
+        "axiom": "F",
         "rules": {
             "F": "F[-F]F[+F][F]"
         },
@@ -152,7 +179,7 @@
         "maxIterations": 8
     },
     "Koch Curve B": {
-        "start": "F-F-F-F",
+        "axiom": "F-F-F-F",
         "rules": {
             "F": "FF-F-F-F-FF"
         },

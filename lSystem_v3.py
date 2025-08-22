@@ -31,12 +31,12 @@ def establishSystem():
 
     jsonSystemChoice = lsystems[choice]
     maxIterations = jsonSystemChoice["maxIterations"]
-    start = jsonSystemChoice["start"]
+    axiom = jsonSystemChoice["axiom"]
     rules = jsonSystemChoice["rules"]
     turnAngle = jsonSystemChoice["turnAngle"]
     defaultDrawingStartAngle = jsonSystemChoice["startAngle"]
     
-    lSystemMoves = lSystemObject.lSystemRules(start,rules,iterations)
+    lSystemMoves = lSystemObject.lSystemRules(axiom,rules,iterations)
 
     ForwardMoveCount = 0
     for move in lSystemMoves:
@@ -45,7 +45,7 @@ def establishSystem():
     returnedCoordinates = lSystemObject.generateCoordinates(center, lSystemMoves, defaultDrawingStartAngle, choiceAngle, turnAngle, drawLength, colorTheme)
 
 zoomOffset = 1
-zoomStep = 0.5
+zoomStep = 0.3
 camera_offset = pygame.Vector2(0, 0)
 dragging = False
 isOnTopGUI = False
@@ -229,7 +229,7 @@ while is_running:
 
             if event.ui_element == drawSpeedSlider:    
                 drawSpeedSlider.set_current_value(event.value)
-                drawSpeedTextBox.set_text(f"Draw speed {drawingSpeed} ms")
+                drawSpeedTextBox.set_text(f"Draw speed {event.value} ms")
                 drawingSpeed = event.value
         if event.type == pygame_gui.UI_CHECK_BOX_CHECKED:
 
@@ -243,6 +243,7 @@ while is_running:
 
         if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
 
+            #rebuildIterationSlider(maxIterations)
             isReadyToDraw = False
             isIterationSliderRebuilt = False
             isDrawing = False
@@ -262,14 +263,13 @@ while is_running:
                 else:
                     choice = event.text
             establishSystem()
-            rebuildIterationSlider(maxIterations)
 
     manager.update(time_delta)    
 
     if drawingSpeed == 0 and not isIterationSliderRebuilt:
         rebuildIterationSlider(maxIterations)
         isIterationSliderRebuilt = True
-    elif drawingSpeed > 1 and isIterationSliderRebuilt:
+    elif drawingSpeed >= 1 and isIterationSliderRebuilt:
         InstantMaxIterations = maxIterations - round(maxIterations / 3)
         rebuildIterationSlider(InstantMaxIterations)
         isIterationSliderRebuilt = False

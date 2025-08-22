@@ -11,12 +11,12 @@ class LSystem:
     def __init__(self):
         self.iterations = 0
 
-    def lSystemRules(self, startString, ruleDict, iterations):
+    def lSystemRules(self, axiom, ruleDict, iterations):
         newString = ""
         if iterations < 1:
-            return startString
+            return axiom
         else:               
-            for char in startString:
+            for char in axiom:
                 for key, value in ruleDict.items():
                     if char not in ruleDict:
                         newString += char
