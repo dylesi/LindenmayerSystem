@@ -15,15 +15,15 @@ def redrawGUI(manager):
     selectSystem = pygame_gui.elements.UIDropDownMenu(options_list=options, starting_option="Select", relative_rect=pygame.Rect((elementPaddingX, 60), (200, 35)), manager=manager, container=outerPanel)
     selectSystemTextBox = pygame_gui.elements.UITextBox(html_text="Select a system to draw!", relative_rect=pygame.Rect((elementPaddingX, 20), (200,35)), manager=manager, container=outerPanel)
 
-    #Titles
+    #Labels
     pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, -15), (200, 50)), text="Lindenmayer Systems",manager=manager, container=outerPanel)
-    pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, 310), (200, 50)), text="Select Colour Style",manager=manager, container=innerPanel)
-
+    pygame_gui.elements.UILabel(relative_rect=pygame.Rect((elementPaddingX, 430), (200, 50)), text="Select Colour Style",manager=manager, container=innerPanel)
 
     #buttons
     generateButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
     resetCamButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, innerPanel.get_relative_rect().height - elementPaddingY - 30), (100, 25)), text='Reset Cam', manager=manager, container=innerPanel)
     quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
+    stopButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 100, innerPanel.get_relative_rect().height + 205), (100, 30)), text='STOP Draw', manager=manager, container=outerPanel)
 
     rotateLeftButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, 50), (40, 30)), text='<', manager=manager, container=innerPanel)
     rotateRightButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 110, 50), (40, 30)), text='>', manager=manager, container=innerPanel)
@@ -40,19 +40,16 @@ def redrawGUI(manager):
     drawWidthSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 3), (200, 25)), start_value= drawWidth, value_range=(1,5), manager=manager, container=innerPanel)
     drawWidthSliderTextBox = pygame_gui.elements.UITextBox(html_text="Draw width " + str(drawWidth), relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 3), (200,35)), manager=manager, container=innerPanel)
 
+    drawSpeedSlider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((elementPaddingX, 40 + elementOffSet * 4), (200, 25)), start_value= drawingSpeed, value_range=(0,100), manager=manager, container=innerPanel)
+    drawSpeedTextBox = pygame_gui.elements.UITextBox(html_text=f"Draw speed {drawingSpeed} ms", relative_rect=pygame.Rect((elementPaddingX, 10 + elementOffSet * 4), (200,35)), manager=manager, container=innerPanel)
 
     #Checkboxes
-    BrightCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25 , 40 + elementOffSet * 4), (25, 25)),text="Bright", manager=manager, container=innerPanel)
-
-    PastelCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5), (25, 25)),text="Pastel", manager=manager, container=innerPanel)
-
-    DarkCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 5.5), (25, 25)),text="Red + Green", manager=manager, container=innerPanel)
-
-    WarmCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6), (25, 25)),text="Fiery", manager=manager, container=innerPanel)
-
-    MonochromeCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 6.5), (25, 25)),text="Green + Blue", manager=manager, container=innerPanel)
-
-    DeepGreenCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 25, elementOffSet * 7), (25, 25)),text="Deep Green", manager=manager, container=innerPanel)
+    BrightCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX  , elementOffSet * 6), (25, 25)),text="Bright", manager=manager, container=innerPanel)
+    PastelCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX, elementOffSet * 6.5), (25, 25)),text="Pastel", manager=manager, container=innerPanel)
+    DarkCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX , elementOffSet * 7), (25, 25)),text="Autumn", manager=manager, container=innerPanel)
+    WarmCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 100, elementOffSet * 6), (25, 25)),text="Warm", manager=manager, container=innerPanel)
+    MonochromeCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 100, elementOffSet * 6.5), (25, 25)),text="Ocean", manager=manager, container=innerPanel)
+    DeepGreenCheckbox = pygame_gui.elements.UICheckBox(relative_rect=pygame.Rect((elementPaddingX + 100, elementOffSet * 7), (25, 25)),text="Deep Green", manager=manager, container=innerPanel)
 
     CheckBoxObjects = []
     CheckBoxObjects.append(BrightCheckbox)
@@ -62,4 +59,4 @@ def redrawGUI(manager):
     CheckBoxObjects.append(MonochromeCheckbox)
     CheckBoxObjects.append(DeepGreenCheckbox)
 
-    return CheckBoxObjects, outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetCamButton, quitButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox
+    return CheckBoxObjects, outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetCamButton, quitButton, stopButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, drawSpeedSlider, drawSpeedTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox

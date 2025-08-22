@@ -19,10 +19,20 @@ surfacePaddingY = 50
 elementPaddingY = 70
 elementPaddingX = 10
 elementOffSet = 80
+isIterationSliderRebuilt = False
+
+#Drawing related variables
+isReadyToDraw = False
+drawingSpeed = 0
+drawingIndex = 0
+isDrawing = False
+DRAW_EVENT = pygame.event.custom_type()
+
 
 #Main variables
 choice = ""
-iterations = 4
+defaultIterations = 3
+iterations = defaultIterations
 drawLength = 5
 drawWidth = 2
 startAngle = 0
