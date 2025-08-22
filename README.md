@@ -43,8 +43,9 @@ Beyond botany, L-systems have also been used to:
 
 ---
 
+
 ## Example Output
-<img width="2250" height="1250" alt="python_Obg2HFVXPM" src="https://github.com/user-attachments/assets/5cc0c8db-a350-4812-875f-990c323a5182" />
+<img width="2250" height="1250" alt="python_XwDOxOyGvU" src="https://github.com/user-attachments/assets/fdfa4816-4a52-456c-aca1-34507d4a415c" />
 <img src="https://i.imgur.com/y1votcB.gif" width="2250" height="1250" />
 
 ---
