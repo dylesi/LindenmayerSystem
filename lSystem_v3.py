@@ -161,6 +161,7 @@ while is_running:
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == generateButton:
+                isReset = False
                 isReadyToDraw = True
                 establishDrawing()
 
@@ -169,22 +170,23 @@ while is_running:
                 sys.exit()
 
             if event.ui_element == resetButton:
+                isReset = True
                 isDrawing = False
                 screen.fill(screenFillColor)
                 camera_offset = pygame.Vector2()
                 zoomOffset = 1
                 zoom = 1.0
 
-            if event.ui_element == rotateRightButton and isReadyToDraw:
+            if event.ui_element == rotateRightButton and isReadyToDraw and not isReset:
                 choiceAngle = (choiceAngle - choiceAngleStep) % 360
                 angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
                 establishDrawing()
 
-            if event.ui_element == rotateLeftButton and isReadyToDraw:
+            if event.ui_element == rotateLeftButton and isReadyToDraw and not isReset:
                 choiceAngle = (choiceAngle + choiceAngleStep) % 360
                 angleSliderTextBox.set_text("Rotation angle: " + str(choiceAngle))
                 establishDrawing()
-        if event.type == pygame.MOUSEWHEEL and isReadyToDraw:
+        if event.type == pygame.MOUSEWHEEL and isReadyToDraw and not isReset:
             if event.y > 0:
                 zoomOffset += zoomStep
             else:            
@@ -201,7 +203,7 @@ while is_running:
                 dragging = False
                 isOnTopGUI = False
 
-        if event.type == pygame.MOUSEMOTION and dragging and isReadyToDraw:
+        if event.type == pygame.MOUSEMOTION and dragging and isReadyToDraw and not isReset:
             mousePos = pygame.Vector2(event.pos)
             if checkMouseNotOntopGUI():
                 changeInMouseMov = mousePos - last_mousePos

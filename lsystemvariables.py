@@ -20,6 +20,7 @@ elementPaddingY = 70
 elementPaddingX = 10
 elementOffSet = 80
 isIterationSliderRebuilt = False
+isReset = False
 
 #Drawing related variables
 isReadyToDraw = False
