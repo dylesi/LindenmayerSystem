@@ -32,9 +32,9 @@ class LSystem:
                 'Bright': [(100, 225), (100,255), (100, 255)],
                 'Pastel': [(180, 225), (180,255), (180, 255)],
                 'Dark': [(0, 100), (0,100), (0, 100)],
-                'Fiery': [(150, 225), (50,180), (0, 100)],
-                'Green + Blue': [(0, 10), (175,255), (150, 225)],
-                'Red + Green': [(175, 255), (150,225), (0, 10)],
+                'Warm': [(150, 225), (50,180), (0, 100)],
+                'Ocean': [(0, 10), (175,255), (150, 225)],
+                'Autumn': [(175, 255), (150,225), (0, 10)],
                 'Deep Green': [(0, 10), (130,255), (50, 100)],
         }
         r = colorKvp[choice][0]
@@ -48,7 +48,7 @@ class LSystem:
 
         defaultDrawingAngle = defaultStartDrawingAngle
         currentAngle = defaultDrawingAngle + startDrawingAngle
-        coordinateArray = []
+        returnedCoordinates = []
         fractalStack = []
         isConnected = True
         drawColor = self.colorSelector(colorTheme)
@@ -58,6 +58,7 @@ class LSystem:
                 fractalStack.append((startPos, currentAngle))
 
             elif move == "]":
+                #isConnected = False
                 currentAngle = fractalStack[-1][-1] 
                 startPos = fractalStack[-1][0]
                 fractalStack.pop(-1)
@@ -76,21 +77,18 @@ class LSystem:
             elif move in  ["0"]:
                 isConnected = False
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-                coordinateArray.append((startPos, endPos, isConnected, drawColor))
+                returnedCoordinates.append((startPos, endPos, isConnected, drawColor))
                 startPos = endPos
                 isConnected = True
 
             elif move in ["F","G","1"]:
                 endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
-
-                if startPos == endPos:
-                    isConnected = False
-                coordinateArray.append((startPos, endPos, isConnected, drawColor))
+                returnedCoordinates.append((startPos, endPos, isConnected, drawColor))
 
                 startPos = endPos
                 isConnected = True
 
-        return coordinateArray
+        return returnedCoordinates
 
     def newCoordinates(self, drawLength, x, y, angle):
         number = angle / 360 * (2 * math.pi)

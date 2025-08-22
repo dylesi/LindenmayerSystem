@@ -8,7 +8,7 @@
         },
         "turnAngle": 90,
         "startAngle": 270,
-        "maxIterations": 20
+        "maxIterations": 15
     },
     "Sierpinski": {
         "start": "F-G-G",
@@ -110,7 +110,7 @@
         },
         "turnAngle": 90,
         "startAngle": 45,
-        "maxIterations": 4
+        "maxIterations": 5
     },
     "Hexagonal Gosper": {
         "start": "XF",
