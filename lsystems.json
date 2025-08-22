@@ -1,5 +1,13 @@
 {
-    "Select": {},
+    "Select": {
+        "axiom": "F",
+        "rules": {
+            "F": "F+G"
+        },
+        "turnAngle": 1,
+        "startAngle": 1,
+        "maxIterations": 1
+    },
     "Dragon Curve": {
         "axiom": "F",
         "rules": {
