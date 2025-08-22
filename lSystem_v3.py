@@ -52,7 +52,7 @@ isOnTopGUI = False
 last_mousePos = pygame.Vector2(0, 0)
 
 # Import GUI elements from external file
-CheckBoxObjects,outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetCamButton, quitButton, stopButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, drawSpeedSlider, drawSpeedTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox = redrawGUI(manager)
+CheckBoxObjects,outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetButton, quitButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, drawSpeedSlider, drawSpeedTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox = redrawGUI(manager)
 
 
 innerPanel.hide()
@@ -168,15 +168,12 @@ while is_running:
                 is_running = False
                 sys.exit()
 
-            if event.ui_element == stopButton:
+            if event.ui_element == resetButton:
                 isDrawing = False
-            
-            if event.ui_element == resetCamButton:
                 screen.fill(screenFillColor)
                 camera_offset = pygame.Vector2()
                 zoomOffset = 1
                 zoom = 1.0
-                establishDrawing()
 
             if event.ui_element == rotateRightButton and isReadyToDraw:
                 choiceAngle = (choiceAngle - choiceAngleStep) % 360

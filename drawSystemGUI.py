@@ -21,9 +21,8 @@ def redrawGUI(manager):
 
     #buttons
     generateButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height - elementPaddingY), (200, 50)), text='Generate!', manager=manager, container=innerPanel)
-    resetCamButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, innerPanel.get_relative_rect().height - elementPaddingY - 30), (100, 25)), text='Reset Cam', manager=manager, container=innerPanel)
-    quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
-    stopButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 100, innerPanel.get_relative_rect().height + 205), (100, 30)), text='STOP Draw', manager=manager, container=outerPanel)
+    resetButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, innerPanel.get_relative_rect().height - elementPaddingY - 30), (100, 25)), text='Reset', manager=manager, container=innerPanel)
+    quitButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, innerPanel.get_relative_rect().height + 205), (100, 30)), text='Quit', manager=manager, container=outerPanel)
 
     rotateLeftButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 50, 50), (40, 30)), text='<', manager=manager, container=innerPanel)
     rotateRightButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((elementPaddingX + 110, 50), (40, 30)), text='>', manager=manager, container=innerPanel)
@@ -59,4 +58,4 @@ def redrawGUI(manager):
     CheckBoxObjects.append(MonochromeCheckbox)
     CheckBoxObjects.append(DeepGreenCheckbox)
 
-    return CheckBoxObjects, outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetCamButton, quitButton, stopButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, drawSpeedSlider, drawSpeedTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox
+    return CheckBoxObjects, outerPanel, innerPanel, selectSystem, selectSystemTextBox, generateButton, resetButton, quitButton, rotateLeftButton, rotateRightButton, angleSliderTextBox, iterationSlider, iterationSliderTextBox, drawLengthSlider, drawLengthSliderTextBox, drawWidthSlider, drawWidthSliderTextBox, drawSpeedSlider, drawSpeedTextBox, BrightCheckbox, PastelCheckbox, DarkCheckbox, WarmCheckbox, MonochromeCheckbox, DeepGreenCheckbox
