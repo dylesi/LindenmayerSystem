@@ -4,8 +4,8 @@
         "rules": {
             "F": "F+G"
         },
-        "turnAngle": 1,
-        "startAngle": 1,
+        "turnAngle": 0,
+        "startAngle": 0,
         "maxIterations": 1
     },
     "Dragon Curve": {

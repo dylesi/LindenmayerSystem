@@ -54,7 +54,7 @@ class LSystem:
         self.returnedCoordinates = []
         self.defaultDrawingStartAngle = 0
         self.choiceAngle = 0
-        self.choiceAngleStep = 20
+        self.choiceAngleStep = 10
         self.colorTheme = "Default"
         self.mousePos = pygame.Vector2()
         self.is_running = True

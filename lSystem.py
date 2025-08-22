@@ -190,6 +190,7 @@ while is_running:
             lSystemObject.iterations = lSystemObject.defaultIterations
             lSystemObject.choiceAngle = lSystemObject.defaultDrawingStartAngle
             GUIElements["angleSliderTextBox"].set_text("Rotation angle:  " + str(lSystemObject.choiceAngle))
+            GUIElements["iterationSlider"].set_current_value(lSystemObject.defaultIterations)
             lSystemObject.zoomOffset = 1
             lSystemObject.camera_offset = pygame.Vector2(0, 0)
             
