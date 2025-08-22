@@ -16,6 +16,16 @@ Beyond botany, L-systems have also been used to:
 
 ---
 
+## Project Goals
+
+- Learn different ways of implementing coding principles
+- Explore and implement Lindenmayer systems  
+- Visualize fractal and plant-like structures  
+- Provide examples that the user can manipulate
+- And mainly to learn more and have fun!
+
+---
+
 ### Example: Quadratic Gosper
 
 - **Axiom**:  
@@ -33,18 +43,8 @@ Beyond botany, L-systems have also been used to:
 - "X" no actions taken, only used as a variable to generate more of the code
 ---
 
-## Project Goals
-
-- Learn different ways of implementing coding principles
-- Explore and implement Lindenmayer systems  
-- Visualize fractal and plant-like structures  
-- Provide examples that the user can manipulate
-- And mainly to learn more and have fun!
-
----
-
-
 ## Example Output
+<img src="https://i.imgur.com/eJ34q97.gif" width="2250" height="1250" />
 <img width="2250" height="1250" alt="python_XwDOxOyGvU" src="https://github.com/user-attachments/assets/fdfa4816-4a52-456c-aca1-34507d4a415c" />
 <img src="https://i.imgur.com/y1votcB.gif" width="2250" height="1250" />
 
@@ -58,6 +58,7 @@ Beyond botany, L-systems have also been used to:
 - Left click and drag pans the drawing around
 - Use drawing speed to determine how fast the image generates (0 is instant)
 
+---
 ## Installation
 ### Direct Download
 - https://github.com/dylesi/LindenmayerSystem/archive/refs/heads/main.zip
