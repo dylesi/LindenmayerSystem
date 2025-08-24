@@ -37,8 +37,8 @@ def drawSystem(drawingIndex):
     isConnected = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][2]
     drawColor = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][3]
 
-    newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-    newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
+    newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
+    newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
 
     if isConnected:
         pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
@@ -49,8 +49,8 @@ def drawSystemInstant():
     for startPos, endPos,  isConnected, drawColor in lSystemObject.returnedCoordinates:
 
         #Näytä aarnille, newX center -> mousepos
-        newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-        newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
+        newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
+        newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
 
         if isConnected:
             pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
@@ -116,7 +116,7 @@ while is_running:
                 screen.fill(screenFillColor)
                 lSystemObject.isReset = True
                 lSystemObject.isDrawing = False
-                lSystemObject.camera_offset = pygame.Vector2()
+                lSystemObject.cameraOffset = pygame.Vector2()
                 lSystemObject.zoomOffset = 1
                 lSystemObject.zoom = 1.0
 
@@ -152,10 +152,8 @@ while is_running:
             GUIObject.mousePos = pygame.Vector2(event.pos)
             if GUIObject.checkMouseNotOntopGUI():
 
-                # changeInMouseMov = lSystemObject.mousePos - lSystemObject.last_mousePos
-                # lSystemObject.camera_offset += changeInMouseMov
-                lSystemObject.camera_offset += lSystemObject.mousePos - lSystemObject.last_mousePos
-                #print(f"cameraoffset: {lSystemObject.camera_offset}, mousepos: {lSystemObject.mousePos - lSystemObject.last_mousePos}")
+                lSystemObject.cameraOffset += lSystemObject.mousePos - lSystemObject.last_mousePos
+                #print(f"cameraoffset: {lSystemObject.cameraOffset}, mousepos: {lSystemObject.mousePos - lSystemObject.last_mousePos}")
                 lSystemObject.last_mousePos = lSystemObject.mousePos
                 establishDrawing()
 
@@ -204,7 +202,7 @@ while is_running:
             GUIElements["angleSliderTextBox"].set_text("Rotation angle:  " + str(lSystemObject.choiceAngle))
             GUIElements["iterationSlider"].set_current_value(lSystemObject.defaultIterations)
             lSystemObject.zoomOffset = 1
-            lSystemObject.camera_offset = pygame.Vector2(0, 0)
+            lSystemObject.cameraOffset = pygame.Vector2(0, 0)
             
             if event.ui_element == GUIElements["selectSystem"]:
                 selected_option = event.text

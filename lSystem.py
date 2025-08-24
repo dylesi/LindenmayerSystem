@@ -25,12 +25,14 @@ class LSystem:
         self.zoomOffset = 1
         self.zoomStep = 0.3
         self.last_mousePos = pygame.Vector2(0, 0)
+        self.cameraOffset = pygame.Vector2(0,0)
 
         #Drawing related variables
         self.isReadyToDraw = False
         self.drawingSpeed = 0
         self.drawingIndex = 0
         self.isDrawing = False
+        self.mousePos = pygame.Vector2()
 
         #Main variables
         self.choice = "Select"
@@ -44,7 +46,6 @@ class LSystem:
         self.choiceAngle = 0
         self.choiceAngleStep = 10
         self.colorTheme = "Default"
-        self.mousePos = pygame.Vector2()
         self.is_running = True
         self.clock = pygame.time.Clock()
 
