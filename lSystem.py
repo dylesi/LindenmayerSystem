@@ -2,7 +2,6 @@ import pygame
 import math
 import random
 import json
-import pygame_gui
 
 window_height = 1000
 window_width = 1800
@@ -15,17 +14,17 @@ class LSystem:
         self.iterations = 3
         self.maxIterations = 5
         self.windowWidth, self.windowHeight = windowSize
-        self.center = (self.windowWidth / 2), (self.windowHeight / 2)
-        self.fps = 60
+        self.center = pygame.Vector2((self.windowWidth / 2), (self.windowHeight / 2))
         self.options = ""
         self.dragging = False
         
         #camera related vars
         self.zoom = 1
         self.zoomOffset = 1
-        self.zoomStep = 0.3
-        self.last_mousePos = pygame.Vector2(0, 0)
-        self.cameraOffset = pygame.Vector2(0,0)
+        self.zoomStep = 0.5
+        self.zoomMousePosition = pygame.Vector2(0, 0)
+        self.lastMousePos = pygame.Vector2(0, 0)
+        self.cameraOffset = pygame.Vector2(0, 0)
 
         #Drawing related variables
         self.isReadyToDraw = False
@@ -39,15 +38,13 @@ class LSystem:
         self.defaultIterations = 3
         self.iterations = self.defaultIterations
         self.drawLength = 5
-        self.drawWidth = 2
+        self.drawWidth = 1
         self.startAngle = 0
         self.returnedCoordinates = []
         self.defaultDrawingStartAngle = 0
         self.choiceAngle = 0
         self.choiceAngleStep = 10
         self.colorTheme = "Default"
-        self.is_running = True
-        self.clock = pygame.time.Clock()
 
     #Load the ruleset from JSON and create coordinates for the graphic to draw
     def loadSystem(self):
@@ -113,6 +110,7 @@ class LSystem:
         returnedCoordinates = []
         fractalStack = []
         isConnected = True
+        random.seed(0)
         drawColor = self.colorSelector(colorTheme)
 
         for move in (inputList):

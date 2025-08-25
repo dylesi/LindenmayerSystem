@@ -18,7 +18,7 @@ class GUIHandler:
         self.safetyMargin = 30
 
     def generateGUI(self, options, choiceAngle, iterations, maxIterations, drawLength, drawWidth, drawingSpeed):
-        self.outerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(20, self.surfacePaddingY / 2, 230, self.windowHeight - self.surfacePaddingY), starting_height=1, manager=self.manager)
+        self.outerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(self.elementPaddingX, self.surfacePaddingY / 2, self.outerPanelWidth, self.windowHeight - self.surfacePaddingY), starting_height=1, manager=self.manager)
         self.innerPanel = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect(-3, 200, 230, 700 ), starting_height=0, manager=self.manager, parent_element=self.outerPanel, container=self.outerPanel)
 
         #Dropdown
