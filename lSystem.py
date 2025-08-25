@@ -21,7 +21,7 @@ class LSystem:
         #camera related vars
         self.zoom = 1
         self.zoomOffset = 1
-        self.zoomStep = 0.5
+        self.zoomStep = 0.20
         self.zoomMousePosition = pygame.Vector2(0, 0)
         self.lastMousePos = pygame.Vector2(0, 0)
         self.cameraOffset = pygame.Vector2(0, 0)
