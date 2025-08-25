@@ -49,13 +49,14 @@ def drawSystemInstant():
     screen.fill(screenFillColor)
     for startPos, endPos,  isConnected, drawColor in lSystemObject.returnedCoordinates:
 
-        newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
-        newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset  + center + lSystemObject.cameraOffset 
+        newX = calculateNewCoords(startPos)
+        newY = calculateNewCoords(endPos)
 
         if isConnected:
             pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
     
-
+def calculateNewCoords(position):
+    return (pygame.math.Vector2(position) - center) * lSystemObject.zoomOffset  + center + lSystemObject.cameraOffset 
 
 def establishDrawing():
 
