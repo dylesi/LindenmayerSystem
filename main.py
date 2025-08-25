@@ -1,4 +1,4 @@
-import LSystem
+import lSystem as LSystem
 import GUI
 import pygame
 import pygame_gui
@@ -14,7 +14,7 @@ windowHeight = 1000
 windowWidth = 1800
 screen = pygame.display.set_mode((windowWidth,windowHeight))
 screen.fill(screenFillColor)
-center = (windowWidth / 2), (windowHeight / 2)
+center = pygame.math.Vector2((windowWidth / 2), (windowHeight / 2))
 fps = 60
 clock = pygame.time.Clock()
 manager = pygame_gui.UIManager((windowWidth, windowHeight))
@@ -38,8 +38,8 @@ def drawSystem():
     isConnected = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][2]
     drawColor = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][3]
 
-    newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
-    newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.cameraOffset
+    newX = calculateNewCoords(startPos)
+    newY = calculateNewCoords(endPos)
 
     if isConnected:
         pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
