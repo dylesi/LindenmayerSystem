@@ -1,221 +1,159 @@
-import lsystemClass
 import pygame
-import pygame_gui
-import sys
+import math
+import random
+import json
 
-pygame.init()
-pygame.display.set_caption("Lindenmayer System")
+window_height = 1000
+window_width = 1800
+screen = pygame.display.set_mode((window_width,window_height))
+window_surface = pygame.Surface((window_width,window_height))
 
-#Initial setup for screen, clock, and manager
-screenFillColor = (26, 26, 26)
-windowHeight = 1000
-windowWidth = 1800
-screen = pygame.display.set_mode((windowWidth,windowHeight))
-center = (windowWidth // 2), (windowHeight / 2)
-fps = 60
-clock = pygame.time.Clock()
-manager = pygame_gui.UIManager((windowWidth, windowHeight))
-
-#Main object
-lSystemObject = lsystemClass.LSystem(manager, screen.get_size())
-lSystemObject.loadSystem()
-GUIElements = lSystemObject.generateGUI()
-GUIElements["innerPanel"].hide()
-
-#Custom event to be used for timing the drawing
-DRAW_EVENT = pygame.event.custom_type()
-is_running = True
-
-
-def drawSystem(drawingIndex):
-    startPos = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][0]
-    endPos = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][1]
-    isConnected = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][2]
-    drawColor = lSystemObject.returnedCoordinates[lSystemObject.drawingIndex][3]
-
-    newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-    newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-
-    if isConnected:
-        pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
-
-def drawSystemInstant():
-
-    screen.fill(screenFillColor)
-    for startPos, endPos,  isConnected, drawColor in lSystemObject.returnedCoordinates:
-
-        newX = (pygame.math.Vector2(startPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-        newY = (pygame.math.Vector2(endPos) - center) * lSystemObject.zoomOffset + center + lSystemObject.camera_offset
-
-        if isConnected:
-            pygame.draw.line(screen, drawColor, newX, newY, lSystemObject.drawWidth)
-
-
-def establishDrawing():
-
-    lSystemObject.isDrawing = False
-    if lSystemObject.drawingSpeed == 0:
-        lSystemObject.loadSystem()
-        drawSystemInstant()
-
-    else:
-        lSystemObject.drawingIndex = 0
-        screen.fill(screenFillColor)
-        pygame.time.set_timer(DRAW_EVENT, 0)
-        lSystemObject.loadSystem()
-        pygame.time.set_timer(DRAW_EVENT, lSystemObject.drawingSpeed)
-        lSystemObject.isDrawing = True
-        #print("Drawing Established")
-
-
-
-while is_running:
-    time_delta = clock.tick(60)/1000.0
-    for event in pygame.event.get():
-
-        manager.process_events(event)
-
-        if event.type == pygame.QUIT:
-            is_running = False
-            sys.exit()
-
-        if event.type == DRAW_EVENT and lSystemObject.isDrawing:
-
-            tempReturnedCoordinates = lSystemObject.returnedCoordinates
-            xres = sum(len(x[0]) for x in tempReturnedCoordinates) / 2
-
-            if lSystemObject.drawingIndex >= int(xres):
-                lSystemObject.isDrawing = False
-
-            else:
-                drawSystem(lSystemObject.drawingIndex)
-                lSystemObject.drawingIndex += 1
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                is_running = False
-                sys.exit()
-
-        if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == GUIElements["generateButton"]:
-                
-                lSystemObject.isReset = False
-                lSystemObject.isReadyToDraw = True
-                establishDrawing()
-
-            if event.ui_element == GUIElements["quitButton"]:
-                lSystemObject.running = False
-                sys.exit()
-
-            if event.ui_element == GUIElements["resetButton"]:
-                screen.fill(screenFillColor)
-                lSystemObject.isReset = True
-                lSystemObject.isDrawing = False
-                lSystemObject.camera_offset = pygame.Vector2()
-                lSystemObject.zoomOffset = 1
-                lSystemObject.zoom = 1.0
-
-            if event.ui_element == GUIElements["rotateRightButton"] and lSystemObject.isReadyToDraw and not lSystemObject.isReset:
-                lSystemObject.choiceAngle = (lSystemObject.choiceAngle - lSystemObject.choiceAngleStep) % 360
-                GUIElements["angleSliderTextBox"].set_text("Rotation angle: " + str(lSystemObject.choiceAngle))
-                establishDrawing()
-
-            if event.ui_element == GUIElements["rotateLeftButton"] and lSystemObject.isReadyToDraw and not lSystemObject.isReset:
-                lSystemObject.choiceAngle = (lSystemObject.choiceAngle + lSystemObject.choiceAngleStep) % 360
-                GUIElements["angleSliderTextBox"].set_text("Rotation angle: " + str(lSystemObject.choiceAngle))
-                establishDrawing()
-
-        if event.type == pygame.MOUSEWHEEL and lSystemObject.isReadyToDraw and not lSystemObject.isReset:
-            if event.y > 0:
-                lSystemObject.zoomOffset += lSystemObject.zoomStep
-            else:            
-                lSystemObject.zoomOffset = max(0.1, lSystemObject.zoomOffset - lSystemObject.zoomStep)  
-            establishDrawing()
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # left mouse button
-                lSystemObject.dragging = True
-                lSystemObject.last_mousePos = pygame.Vector2(event.pos)
-
-        if event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:
-                lSystemObject.dragging = False
-
-        if event.type == pygame.MOUSEMOTION and lSystemObject.dragging and lSystemObject.isReadyToDraw and not lSystemObject.isReset:
-            lSystemObject.mousePos = pygame.Vector2(event.pos)
-            if lSystemObject.checkMouseNotOntopGUI():
-                lSystemObject.changeInMouseMov = lSystemObject.mousePos - lSystemObject.last_mousePos
-                lSystemObject.camera_offset += lSystemObject.changeInMouseMov
-                lSystemObject.last_mousePos = lSystemObject.mousePos
-                establishDrawing()
-
-        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:    
-            if event.ui_element == GUIElements["iterationSlider"]: 
-                GUIElements["iterationSlider"].set_current_value(event.value)
-                GUIElements["iterationSliderTextBox"].set_text("Iterations " + str(event.value))
-                lSystemObject.iterations = event.value
-
-            if event.ui_element == GUIElements["drawLengthSlider"]:    
-                GUIElements["drawLengthSlider"].set_current_value(event.value)
-                GUIElements["drawLengthSliderTextBox"].set_text("Draw length " + str(event.value))
-                lSystemObject.drawLength = event.value
-
-            if event.ui_element == GUIElements["drawWidthSlider"]:    
-                GUIElements["drawWidthSlider"].set_current_value(event.value)
-                GUIElements["drawWidthSliderTextBox"].set_text("Draw width " + str(event.value))
-                lSystemObject.drawWidth = event.value
-
-            if event.ui_element == GUIElements["drawSpeedSlider"]:    
-                GUIElements["drawSpeedSlider"].set_current_value(event.value)
-                GUIElements["drawSpeedSliderTextBox"].set_text(f"Draw speed {event.value} ms")
-                lSystemObject.drawingSpeed = event.value
-
-        if event.type == pygame_gui.UI_CHECK_BOX_CHECKED:
-
-            lSystemObject.colorTheme = event.ui_element.text
-            checkedBox = event.ui_element
-
-            for checkBoxObj in GUIElements["CheckBoxObjects"]:
-                if checkBoxObj != checkedBox:
-                    checkBoxObj.set_state(False)
-
-
-        if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
-
-            lSystemObject.rebuildIterationSlider()
-            screen.fill((screenFillColor))
-            lSystemObject.isReadyToDraw = False
-            lSystemObject.isIterationSliderRebuilt = False
-            lSystemObject.isDrawing = False
-            lSystemObject.iterations = lSystemObject.defaultIterations
-            lSystemObject.choiceAngle = lSystemObject.defaultDrawingStartAngle
-            GUIElements["angleSliderTextBox"].set_text("Rotation angle:  " + str(lSystemObject.choiceAngle))
-            GUIElements["iterationSlider"].set_current_value(lSystemObject.defaultIterations)
-            lSystemObject.zoomOffset = 1
-            lSystemObject.camera_offset = pygame.Vector2(0, 0)
-            
-            if event.ui_element == GUIElements["selectSystem"]:
-                selected_option = event.text
-                if selected_option != "Select":
-                    GUIElements["innerPanel"].show()
-                if selected_option == "Select":
-                    GUIElements["innerPanel"].hide()
-                else:
-                    lSystemObject.choice = event.text
-            lSystemObject.loadSystem()
-
-    manager.update(fps)    
-
-    if lSystemObject.drawingSpeed == 0 and not lSystemObject.isIterationSliderRebuilt:
-        lSystemObject.rebuildIterationSlider()
-        lSystemObject.isIterationSliderRebuilt = True
+class LSystem:
+    def __init__(self, manager, windowSize):
+        self.manager = manager
+        self.iterations = 3
+        self.maxIterations = 5
+        self.windowWidth, self.windowHeight = windowSize
+        self.center = pygame.Vector2((self.windowWidth / 2), (self.windowHeight / 2))
+        self.options = ""
+        self.dragging = False
         
-    elif lSystemObject.drawingSpeed >= 1 and lSystemObject.isIterationSliderRebuilt:
-        InstantMaxIterations = lSystemObject.maxIterations - round(lSystemObject.maxIterations / 3)
-        lSystemObject.rebuildIterationSlider(InstantMaxIterations)
-        lSystemObject.isIterationSliderRebuilt = False
+        #camera related vars
+        self.zoom = 1
+        self.zoomOffset = 1
+        self.zoomStep = 0.5
+        self.zoomMousePosition = pygame.Vector2(0, 0)
+        self.lastMousePos = pygame.Vector2(0, 0)
+        self.cameraOffset = pygame.Vector2(0, 0)
 
-    #------Updates, drawing and refreshes-------
+        #Drawing related variables
+        self.isReadyToDraw = False
+        self.drawingSpeed = 0
+        self.drawingIndex = 0
+        self.isDrawing = False
+        self.mousePos = pygame.Vector2()
+
+        #Main variables
+        self.choice = "Select"
+        self.defaultIterations = 3
+        self.iterations = self.defaultIterations
+        self.drawLength = 5
+        self.drawWidth = 1
+        self.startAngle = 0
+        self.returnedCoordinates = []
+        self.defaultDrawingStartAngle = 0
+        self.choiceAngle = 0
+        self.choiceAngleStep = 10
+        self.colorTheme = "Default"
+
+    #Load the ruleset from JSON and create coordinates for the graphic to draw
+    def loadSystem(self):
+        with open ("lsystems.json", "r") as f:
+            lsystems = json.load(f)
+
+        #Make a list with all the titles of systems in JSON
+        self.options = []
+        for name in lsystems:
+            self.options.append(name)
+
+        jsonSystemChoice = lsystems[self.choice]
+        self.maxIterations = jsonSystemChoice["maxIterations"]
+        self.axiom = jsonSystemChoice["axiom"]
+        self.rules = jsonSystemChoice["rules"]
+        self.turnAngle = jsonSystemChoice["turnAngle"]
+        self.defaultDrawingStartAngle = jsonSystemChoice["startAngle"]
+
+        self.lSystemMoves = self.lSystemRules(self.axiom,self.rules,self.iterations)
+        self.returnedCoordinates = self.generateCoordinates(self.center, self.lSystemMoves, self.defaultDrawingStartAngle, self.choiceAngle, self.turnAngle, self.drawLength, self.colorTheme)
+        #print(f"Moves: {len(self.lSystemMoves)}, coordinateData: {self.returnedCoordinates}")
+
+
+    #Function for creating the movelist
+    def lSystemRules(self, axiom, ruleDict, iterations):
+        result = []
+        if iterations < 1:
+            return axiom
+        else:               
+            for char in axiom:
+                if char in ruleDict:
+                    result.append(ruleDict[char])
+                else:
+                    result.append(char)
+        return self.lSystemRules("".join(result), ruleDict, iterations - 1)
     
-    manager.draw_ui(screen)
-    pygame.display.update()
+
+    #Colour themes
+    def colorSelector(self, choice):
+        colorKvp = {
+                'Default': [(255, 255), (255,255), (255, 255)],
+                'Bright': [(100, 225), (100,255), (100, 255)],
+                'Pastel': [(180, 225), (180,255), (180, 255)],
+                'Dark': [(0, 100), (0,100), (0, 100)],
+                'Warm': [(150, 225), (50,180), (0, 100)],
+                'Ocean': [(0, 10), (175,255), (150, 225)],
+                'Autumn': [(175, 255), (150,225), (0, 10)],
+                'Deep Green': [(0, 10), (130,255), (50, 100)],
+        }
+        r = colorKvp[choice][0]
+        g = colorKvp[choice][1]
+        b = colorKvp[choice][2]
+        
+        return((random.randint(r[0], r[1]), random.randint(g[0], g[1]), random.randint(b[0], b[1])))
+
+    #Create a tuple with start x,y coordinates, endpoint x,y coordinates and colour values
+    #Todo:
+    #Implement a proper way of handling unnecessary drawing with the "isconnected" flag
+    def generateCoordinates(self, startPos, inputList:str, defaultStartDrawingAngle, startDrawingAngle:float, turnAngle:float, drawLength:float, colorTheme):
+
+        defaultDrawingAngle = defaultStartDrawingAngle
+        currentAngle = defaultDrawingAngle + startDrawingAngle
+        returnedCoordinates = []
+        fractalStack = []
+        isConnected = True
+        random.seed(0)
+        drawColor = self.colorSelector(colorTheme)
+
+        for move in (inputList):
+            if move == "[":
+                fractalStack.append((startPos, currentAngle))
+
+            elif move == "]":
+                #isConnected = False
+                currentAngle = fractalStack[-1][-1] 
+                startPos = fractalStack[-1][0]
+                fractalStack.pop(-1)
+
+            elif move == "+":
+                currentAngle += turnAngle
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
+
+            elif move == "-":
+                currentAngle -= turnAngle
+                if colorTheme != "Default":
+                    drawColor = self.colorSelector(colorTheme)
+
+            elif move in  ["0"]:
+                isConnected = False
+                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
+                returnedCoordinates.append((startPos, endPos, isConnected, drawColor))
+                startPos = endPos
+                isConnected = True
+
+            elif move in ["F","G","1"]:
+                endPos = self.newCoordinates(drawLength, startPos[0], startPos[1], currentAngle)
+                returnedCoordinates.append((startPos, endPos, isConnected, drawColor))
+                startPos = endPos
+                isConnected = True
+
+        return returnedCoordinates
+
+    #calculating the new endpoint for the start x, y coordinates
+    def newCoordinates(self, drawLength, x, y, angle):
+        number = angle / 360 * (2 * math.pi)
+        newY =  y + math.sin(number) * drawLength
+        newX =  x + math.cos(number) * drawLength
+        return(newX, newY)
+
+
+    
